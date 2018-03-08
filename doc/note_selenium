@@ -1,0 +1,43 @@
+Read the Selenium documentation
+https://docs.seleniumhq.org/docs/03_webdriver.jsp#chapter03-reference
+
+Must at least 5 requirements
+1. sign in
+- sign in successfully
+- sign in with wrong information (username and password)
+ 
+2. sign up
+- sign up successfully
+- missing mandatory field
+- wrong email format
+- password validation
+
+3. change password
+- change password successfully
+- wrong old password
+- pw length
+- same with confirm password
+- new should not be the same as old
+
+4. sign out
+- sign out successfully
+
+5. post message
+- post message to own profile
+- post message to others' profile
+- refresh the wall
+
+6. Search user
+- user not found
+- search successfully
+
+
+Test steps required:
+button check
+option list select
+fill in form
+verify text
+
+Test reporting:
+- what kind of format
+- test result, test steps (if possible)
