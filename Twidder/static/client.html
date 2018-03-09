@@ -16,11 +16,11 @@
                     <!--Added the attribute "required" in every input field for mandatory field checking.-->
                     <form id= "signInForm" name='signIn' action="" method="post" onsubmit="return signInValidator(this)">
                     <!--If the input type is "email", then it will automatically check the email format.-->
-                        <div class="row"><label>Email</label><input type='text' name='email'></div>
-                        <div class="row"><label>Password</label><input type='password' name='passwordSignIn'></div>
+                        <div class="row"><label>Email</label><input type='text' name='email' id="signin_email"></div>
+                        <div class="row"><label>Password</label><input type='password' name='passwordSignIn' id="signin_pw"></div>
                         <!-- Added span to display error message and completed the styling-->
                         <span class="row" id="errormsgSignIn"> </span>
-                        <div class="row"><button type="submit">Login</button></div>
+                        <div class="row"><button type="submit" id="btn_signin">Login</button></div>
                     </form>
                 </div>
                 
