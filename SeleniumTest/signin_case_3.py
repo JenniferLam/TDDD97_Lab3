@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 import common
 
 # Create chrome webdriver
-driver=webdriver.Chrome()
+driver = webdriver.Chrome()
 
 # Test Case Information
 result = True
@@ -32,12 +32,12 @@ f.write(str(step_num)+'. '+'Click the Sign In button\n')
 step_num+= 1
 driver.implicitly_wait(3)
 
-errormsg = driver.find_element_by_id("errormsgSignIn")
+
 f.write(str(step_num)+'. '+'Verify the error message ')
 step_num+= 1
 
 driver.save_screenshot('./result/signin_case_3_1.png')
-
+errormsg = driver.find_element_by_id("errormsgSignIn")
 if errormsg.text != "Please type your email.":
 	result = False
 	f.write('(WRONG ERROR MESSAGE)')
@@ -55,13 +55,13 @@ step_num+= 1
 
 
 # Error message is expected
-signin_button = driver.find_element_by_id("btn_signin")
+
 signin_button.click()
 f.write(str(step_num)+'. '+'Click the Sign In button\n')
 step_num+= 1
 driver.implicitly_wait(3)
 
-errormsg = driver.find_element_by_id("errormsgSignIn")
+
 f.write(str(step_num)+'. '+'Verify the error message ')
 step_num+= 1
 
@@ -83,13 +83,13 @@ f.write(str(step_num)+'. '+'Fill in the password\n')
 step_num+= 1
 
 # Error message is expected
-signin_button = driver.find_element_by_id("btn_signin")
+
 signin_button.click()
 f.write(str(step_num)+'. '+'Click the Sign In button\n')
 step_num+= 1
 driver.implicitly_wait(3)
 
-errormsg = driver.find_element_by_id("errormsgSignIn")
+
 f.write(str(step_num)+'. '+'Verify the error message ')
 step_num+= 1
 
@@ -101,7 +101,7 @@ if errormsg.text != "Please type your email.":
 
 f.write('\n')
 
-#End of the test
+# End of the test
 driver.quit()
 f.write(str(step_num)+'. '+'Close the browser\n\n')
 step_num+= 1

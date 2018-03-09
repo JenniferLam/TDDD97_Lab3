@@ -42,10 +42,10 @@ step_num+= 1
 
 driver.save_screenshot('./result/signin_case_2_1.png')
 
-errormsg = driver.find_element_by_id("errormsgSignIn")
+
 f.write(str(step_num)+'. '+'Verify the error message ')
 step_num+= 1
-
+errormsg = driver.find_element_by_id("errormsgSignIn")
 if errormsg.text != "Wrong username or password.":
 	result = False
 	f.write('(WRONG ERROR MESSAGE)')
@@ -64,7 +64,7 @@ step_num+= 1
 
 driver.save_screenshot('./result/signin_case_2_2.png')
 
-errormsg = driver.find_element_by_id("errormsgSignIn")
+
 f.write(str(step_num)+'. '+'Verify the error message ')
 step_num+= 1
 
