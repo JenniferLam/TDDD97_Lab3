@@ -63,6 +63,3 @@ f.write(str(step_num)+'. '+'Close the browser\n\n')
 step_num+= 1
 common.printTestResult(f,result)
 f.close()
-
-
-
