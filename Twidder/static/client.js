@@ -472,7 +472,7 @@ retrieveMsg = function(tab){
                     var allMsg = responseMsg.data;
                     document.getElementById("msgWall_browse").innerHTML = "";
                     for (var i=allMsg.length-1; i>=0;i--){
-                        document.getElementById("msgWall_browse").innerHTML += "From: " + allMsg[i].fromemail + "</div>";
+                        document.getElementById("msgWall_browse").innerHTML += "<div class= \"row\">"+"From: " + allMsg[i].fromemail + "</div>" ;
                         document.getElementById("msgWall_browse").innerHTML += "<div class= \"msgBorder row\">" + allMsg[i].content + "</div>" + "<div class= \"row\"></div>";
                     }
                 } 

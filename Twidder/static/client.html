@@ -53,9 +53,9 @@
     <script type=”text/view” id="profileview">
 	    <div id = "ProfileContent">
             <div id = "navigationBar">
-                <div class="row"><button class="tab active" onclick="selectTab(this,'home')">Home</button></div>
-                <div class="row"><button class="tab" onclick="selectTab(this,'browse')">Browse</button></div>
-                <div class="row"><button class="tab" onclick="selectTab(this,'account')">Account</button></div>
+                <div class="row"><button class="tab active" onclick="selectTab(this,'home')" id="tab_home">Home</button></div>
+                <div class="row"><button class="tab" onclick="selectTab(this,'browse')" id="tab_browse">Browse</button></div>
+                <div class="row"><button class="tab" onclick="selectTab(this,'account')" id="tab_account">Account</button></div>
             </div>
             
             <div id="home" class="tabcontent defaultPage" >
@@ -95,7 +95,7 @@
                 <form id="postMsgForm_home" action="" method="post" onsubmit="return postMsg('home', this)">
                     <div class=row"><textarea rows="13" name="postArea" class="postBox" onfocus="return clearMsg('errormsgPostWall_home')"></textarea></div>
                     <div class=row">
-                        <button type="submit">Post</button>
+                        <button type="submit" id = "btn_post_home">Post</button>
                         <span id="errormsgPostWall_home"></span>
                     </div>
 
@@ -126,7 +126,7 @@
                 </form>
                 <div id="signOut">
                 <h3>Sign Out</h3>
-                <button type="submit" onclick="return signOut()">Sign Out</button>
+                <button type="submit" onclick="return signOut()" id="btn_signout">Sign Out</button>
                 </div>
             </div>
 		</div>
@@ -141,10 +141,10 @@
         </div>
                 
         <form id="postMsgForm_browse" action="" method="post" onsubmit="return postMsg('browse', this)">
-            <div class="row"><textarea rows="13" name="postArea" class="postBox" onfocus="return clearMsg('errormsgPostWall_browse')"></textarea>
+            <div class="row"><textarea rows="13" name="postArea" class="postBox" onfocus="return clearMsg('errormsgPostWall_browse')" id="postBox_browse"></textarea>
             </div>
             <div class="row">
-                <button type="submit">Post</button>
+                <button type="submit" id="btn_post_browse">Post</button>
                 <span id="errormsgPostWall_browse"></span>
             </div>
         </form>
