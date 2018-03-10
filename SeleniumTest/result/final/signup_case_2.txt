@@ -1,0 +1,13 @@
+Scenario: Sign up a existing user
+Pre-condition: The user already signed up
+
+Test Steps:
+
+1. Open the browser
+2. Fill in all signup information
+3. Click the Sign Up button
+4. Verify error message - User already exists.
+5. Close the browser
+
+Test Result: Passed
+

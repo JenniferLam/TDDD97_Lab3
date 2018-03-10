@@ -1,0 +1,13 @@
+Scenario: Sign up successfully
+Pre-condition: The user did not sign up before
+
+Test Steps:
+
+1. Open the browser
+2. Fill in all signup information
+3. Click the Sign Up button
+4. Sign up a new user - Successfully created a new user.
+5. Close the browser
+
+Test Result: Passed
+

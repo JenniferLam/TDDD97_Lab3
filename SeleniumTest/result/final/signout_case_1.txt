@@ -1,0 +1,16 @@
+Scenario: Sign Out Successfully
+Pre-condition: The user signed in
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the username
+3. Fill in the password
+4. Click the Sign In button
+5. Go to the profile view
+6. Verify the username 
+7. Go to Account Tab
+8. Close the browser
+
+Test Result: Passed
+

@@ -1,0 +1,20 @@
+Scenario: Sign in with missing username or password
+Pre-condition: The user did not sign in before
+
+Test Steps:
+
+1. Open the browser
+2. Click the Sign In button
+3. Verify the error message - Please type your email.
+4. Fill in the username
+5. No password
+6. Click the Sign In button
+7. Verify the error message - Please type your password.
+8. No username
+9. Fill in the password
+10. Click the Sign In button
+11. Verify the error message - Please type your email.
+12. Close the browser
+
+Test Result: Passed
+

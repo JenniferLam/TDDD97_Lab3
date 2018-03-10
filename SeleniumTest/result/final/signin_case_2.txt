@@ -1,0 +1,17 @@
+Scenario: Sign in with wrong username and password
+Pre-condition: The user did not sign in before
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the wrong username
+3. Fill in the password
+4. Click the Sign In button
+5. Verify the error message - Wrong username or password.
+6. Fill in the username
+7. Fill in the wrong password
+8. Verify the error message - Wrong username or password.
+9. Close the browser
+
+Test Result: Passed
+

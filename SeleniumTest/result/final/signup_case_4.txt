@@ -1,0 +1,17 @@
+Scenario: Sign up with password validation
+Pre-condition: The user did not sign up before
+
+Test Steps:
+
+1. Open the browser
+2. Fill in all signup information
+3. Fill in the password less than 8 characters
+4. Click the Sign Up button
+5. Verify error message - The password should have at least 8 characters.
+6. Fill in the different password in repeatPSW 
+7. Click the Sign Up button
+8. Verify error message - The password must be the same.
+9. Close the browser
+
+Test Result: Passed
+

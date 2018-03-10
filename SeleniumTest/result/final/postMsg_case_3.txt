@@ -1,0 +1,37 @@
+Scenario: Post a message to same user and the message can be retrieved in home and browse tab
+Pre-condition: The user signed in
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the username
+3. Fill in the password
+4. Click the Sign In button
+5. Go to the profile view
+6. Verify the username 
+7. Write the message in the post area in Home Tab
+8. Receive the feedback from the server - Message posted.
+9. The latest message is displayed on the wall 
+From: abc@abc
+This message should be displayed in home and browse tab
+10. Go to Browse Tab
+11. Search for the current user profile's email
+12. Click the Search Button
+13. The user profile is displayed 
+14. The message posted in home tab is retrieved in browse tab 
+From: abc@abc
+This message should be displayed in home and browse tab
+15. Write the message in the post area
+16. Receive the feedback from the server - Message posted.
+17. The latest message is posted 
+From: abc@abc
+Testing on 10 Mar 2018 from abc@abc
+18. Go back to home tab
+19. Click the Refresh button
+20. Message posted in browse tab is displayed in home tab 
+From: abc@abc
+Testing on 10 Mar 2018 from abc@abc
+21. Close the browser
+
+Test Result: Passed
+

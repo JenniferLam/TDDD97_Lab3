@@ -1,0 +1,378 @@
+Scenario: Sign up with password validation
+Pre-condition: The user did not sign up before
+
+Test Steps:
+
+1. Open the browser
+2. Fill in all signup information
+3. Fill in the password less than 8 characters
+4. Click the Sign Up button
+5. Verify error message - The password should have at least 8 characters.
+6. Fill in the different password in repeatPSW 
+7. Click the Sign Up button
+8. Verify error message - The password must be the same.
+9. Close the browser
+
+Test Result: Passed
+
+Scenario: Sign up successfully
+Pre-condition: The user did not sign up before
+
+Test Steps:
+
+1. Open the browser
+2. Fill in all signup information
+3. Click the Sign Up button
+4. Sign up a new user - Successfully created a new user.
+5. Close the browser
+
+Test Result: Passed
+
+Scenario: Sign up with missing information
+Pre-condition: The user did not sign up before
+
+Test Steps:
+
+1. Open the browser
+2. Leave all fields empty
+3. Click the Sign Up button
+4. Verify the error message - Please type your first name.
+5. Fill in the first name
+6. Click the Sign Up button
+7. Verify the error message - Please type your family name.
+8. Fill in the family name
+9. Click the Sign Up button
+10. Verify the error message - Please select your gender.
+11. Select the gender
+12. Click the Sign Up button
+13. Verify the error message - Please type your city.
+14. Fill in the city
+15. Click the Sign Up button
+16. Verify the error message - Please type your country.
+17. Fill in the country
+18. Click the Sign Up button
+19. Verify the error message - Please type your email.
+20. Fill in the email
+21. Click the Sign Up button
+22. Verify the error message - Please type your password.
+23. Fill in the password
+24. Click the Sign Up button
+25. Verify the error message - Please confirm your password.
+26. Fill in the repeatPSW
+27. Click the Sign Up button
+28. Sign up a new user - Successfully created a new user.
+29. Close the browser
+
+Test Result: Passed
+
+Scenario: Sign up a existing user
+Pre-condition: The user already signed up
+
+Test Steps:
+
+1. Open the browser
+2. Fill in all signup information
+3. Click the Sign Up button
+4. Verify error message - User already exists.
+5. Close the browser
+
+Test Result: Passed
+
+Scenario: Sign up with invalid email format
+Pre-condition: The user did not sign up before
+
+Test Steps:
+
+1. Open the browser
+2. Fill in all signup information with invalid email
+3. Click the Sign Up button
+4. Verify error message - Please type valid email address.
+5. Fill in another invalid email format
+6. Click the Sign Up button
+7. Verify error message - Please type valid email address.
+8. Fill in another invalid email format
+9. Click the Sign Up button
+10. Verify error message Please type valid email address.
+11. Close the browser
+
+Test Result: Passed
+
+Scenario: Sign in with missing username or password
+Pre-condition: The user did not sign in before
+
+Test Steps:
+
+1. Open the browser
+2. Click the Sign In button
+3. Verify the error message - Please type your email.
+4. Fill in the username
+5. No password
+6. Click the Sign In button
+7. Verify the error message - Please type your password.
+8. No username
+9. Fill in the password
+10. Click the Sign In button
+11. Verify the error message - Please type your email.
+12. Close the browser
+
+Test Result: Passed
+
+Scenario: Sign in with wrong username and password
+Pre-condition: The user did not sign in before
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the wrong username
+3. Fill in the password
+4. Click the Sign In button
+5. Verify the error message - Wrong username or password.
+6. Fill in the username
+7. Fill in the wrong password
+8. Verify the error message - Wrong username or password.
+9. Close the browser
+
+Test Result: Passed
+
+Scenario: Sign in successfully
+Pre-condition: The user did not sign in before
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the username
+3. Fill in the password
+4. Click the Sign In button
+5. Go to the profile view
+6. Verify the username 
+7. Close the browser
+
+Test Result: Passed
+
+Scenario: Sign in with invalid email
+Pre-condition: The user did not sign in before
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the username with invalid email format
+3. Fill in the password
+4. Click the Sign In button
+5. Verify the error message - Please type valid email address.
+6. Close the browser
+
+Test Result: Passed
+
+Scenario: Change password with missing information
+Pre-condition: The user signed in
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the username
+3. Fill in the password
+4. Click the Sign In button
+5. Go to the profile view
+6. Verify the username 
+7. Go to Account Tab
+8. Fill in nothing
+9. Click the ChangePW button
+10. Verify the error message Please type your old password.
+11. Fill in old password only
+12. Click the ChangePW button
+13. Verify the error message Please type your new password.
+14. Fill in new password
+15. Click the ChangePW button
+16. Verify the error message Please confirm your password.
+17. Close the browser
+
+Test Result: Passed
+
+Scenario: Change password with new password violating validation
+Pre-condition: The user signed in
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the username
+3. Fill in the password
+4. Click the Sign In button
+5. Go to the profile view
+6. Verify the username 
+7. Go to Account Tab
+8. Fill in new password less than 8 characters
+9. Click the ChangePW button
+10. Verify the error message - The password should have at least 8 characters.
+11. Fill in new password which is same as old password
+12. Click the ChangePW button
+13. Verify the error message - New password cannot be as same as old password.
+14. Fill in wrong confirm password
+15. Click the ChangePW button
+16. Verify the error message - The password must be the same.
+17. Close the browser
+
+Test Result: Passed
+
+Scenario: Change password with old password
+Pre-condition: The user signed in
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the username
+3. Fill in the password
+4. Click the Sign In button
+5. Go to the profile view
+6. Verify the username 
+7. Go to Account Tab
+8. Fill in wrong old password
+9. Click the ChangePW button
+10. Verify the error message - 
+11. Close the browser
+
+Test Result: Passed
+
+Scenario: Search non-exist user in browse tab
+Pre-condition: The user signed in
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the username
+3. Fill in the password
+4. Click the Sign In button
+5. Go to the profile view
+6. Verify the username 
+7. Go to Browse Tab
+8. Type a non-exist email address
+9. Click the Search Button
+10. Verify error message - No such user.
+11. Close the browser
+
+Test Result: Passed
+
+Scenario: Change password Successfully
+Pre-condition: The user signed in
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the username
+3. Fill in the password
+4. Click the Sign In button
+5. Go to the profile view
+6. Verify the username 
+7. Go to Account Tab
+8. Fill in old password 
+9. Fill in new password
+10. Fill in confirm password
+11. Click the ChangePW button
+12. Change password successfully
+13. Sign out and sign in with new password
+14. Fill in the username
+15. Fill in the password
+16. Click the Sign In button
+17. Go to the profile view
+18. Verify the username 
+19. Recover to old password 
+20. Close the browser
+
+Test Result: Passed
+
+Scenario: Post a message in home tab
+Pre-condition: The user signed in
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the username
+3. Fill in the password
+4. Click the Sign In button
+5. Go to the profile view
+6. Verify the username 
+7. Write the message in the post area
+8. Receive the feedback from the server - Message posted.
+9. The latest message is displayed on the wall 
+From: abc@abc
+Testing on 10 Mar 2018
+10. Close the browser
+
+Test Result: Passed
+
+Scenario: Post a message to same user and the message can be retrieved in home and browse tab
+Pre-condition: The user signed in
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the username
+3. Fill in the password
+4. Click the Sign In button
+5. Go to the profile view
+6. Verify the username 
+7. Write the message in the post area in Home Tab
+8. Receive the feedback from the server - Message posted.
+9. The latest message is displayed on the wall 
+From: abc@abc
+This message should be displayed in home and browse tab
+10. Go to Browse Tab
+11. Search for the current user profile's email
+12. Click the Search Button
+13. The user profile is displayed 
+14. The message posted in home tab is retrieved in browse tab 
+From: abc@abc
+This message should be displayed in home and browse tab
+15. Write the message in the post area
+16. Receive the feedback from the server - Message posted.
+17. The latest message is posted 
+From: abc@abc
+Testing on 10 Mar 2018 from abc@abc
+18. Go back to home tab
+19. Click the Refresh button
+20. Message posted in browse tab is displayed in home tab 
+From: abc@abc
+Testing on 10 Mar 2018 from abc@abc
+21. Close the browser
+
+Test Result: Passed
+
+Scenario: Post a message in browse tab
+Pre-condition: The user signed in
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the username
+3. Fill in the password
+4. Click the Sign In button
+5. Go to the profile view
+6. Verify the username 
+7. Go to Browse Tab
+8. Type a friend's email
+9. Click the Search Button
+10. The user profile is displayed 
+11. Write the message in the post area
+12. Receive the feedback from the server - Message posted.
+13. The latest message is displayed on the wall 
+From: abc@abc
+Testing on 10 Mar 2018 from abc@abc
+14. Close the browser
+
+Test Result: Passed
+
+Scenario: Sign Out Successfully
+Pre-condition: The user signed in
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the username
+3. Fill in the password
+4. Click the Sign In button
+5. Go to the profile view
+6. Verify the username 
+7. Go to Account Tab
+8. Close the browser
+
+Test Result: Passed
+

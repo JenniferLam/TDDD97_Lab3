@@ -1,0 +1,14 @@
+Scenario: Sign in with invalid email
+Pre-condition: The user did not sign in before
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the username with invalid email format
+3. Fill in the password
+4. Click the Sign In button
+5. Verify the error message - Please type valid email address.
+6. Close the browser
+
+Test Result: Passed
+

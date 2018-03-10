@@ -1,0 +1,37 @@
+Scenario: Sign up with missing information
+Pre-condition: The user did not sign up before
+
+Test Steps:
+
+1. Open the browser
+2. Leave all fields empty
+3. Click the Sign Up button
+4. Verify the error message - Please type your first name.
+5. Fill in the first name
+6. Click the Sign Up button
+7. Verify the error message - Please type your family name.
+8. Fill in the family name
+9. Click the Sign Up button
+10. Verify the error message - Please select your gender.
+11. Select the gender
+12. Click the Sign Up button
+13. Verify the error message - Please type your city.
+14. Fill in the city
+15. Click the Sign Up button
+16. Verify the error message - Please type your country.
+17. Fill in the country
+18. Click the Sign Up button
+19. Verify the error message - Please type your email.
+20. Fill in the email
+21. Click the Sign Up button
+22. Verify the error message - Please type your password.
+23. Fill in the password
+24. Click the Sign Up button
+25. Verify the error message - Please confirm your password.
+26. Fill in the repeatPSW
+27. Click the Sign Up button
+28. Sign up a new user - Successfully created a new user.
+29. Close the browser
+
+Test Result: Passed
+

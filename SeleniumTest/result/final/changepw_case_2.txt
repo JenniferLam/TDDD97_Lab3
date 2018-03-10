@@ -1,0 +1,25 @@
+Scenario: Change password with new password violating validation
+Pre-condition: The user signed in
+
+Test Steps:
+
+1. Open the browser
+2. Fill in the username
+3. Fill in the password
+4. Click the Sign In button
+5. Go to the profile view
+6. Verify the username 
+7. Go to Account Tab
+8. Fill in new password less than 8 characters
+9. Click the ChangePW button
+10. Verify the error message - The password should have at least 8 characters.
+11. Fill in new password which is same as old password
+12. Click the ChangePW button
+13. Verify the error message - New password cannot be as same as old password.
+14. Fill in wrong confirm password
+15. Click the ChangePW button
+16. Verify the error message - The password must be the same.
+17. Close the browser
+
+Test Result: Passed
+
