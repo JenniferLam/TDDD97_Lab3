@@ -8,7 +8,7 @@ import time
 def createFileObj(fileName):
 	#timestr = time.strftime("%Y%m%d-%H%M%S")
 	#fName = './result/' + fileName + '_' + timestr
-	fName = './result/' + fileName
+	fName = './result/' + fileName + '.txt'
 	f = open(fName, 'w')
 	return f
 
@@ -20,6 +20,6 @@ def printTitle(f, scenario, precondition):
 def printTestResult(f,result):
 
 	if result:
-		f.write('Test Result: Passed\n')
+		f.write('Test Result: Passed\n\n')
 	else:
-		f.write('Test Result: Failed\n')
+		f.write('Test Result: Failed\n\n')
