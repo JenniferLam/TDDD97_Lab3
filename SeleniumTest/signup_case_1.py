@@ -40,14 +40,15 @@ f.write(str(step_num)+'. '+'Click the Sign Up button\n')
 step_num+= 1
 
 errormsg = driver.find_element_by_id("errormsgSignUp")
-f.write(str(step_num)+'. '+'Verify the error message (Please type your first name.) ')
+msgtext = "Please type your first name."
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
 step_num+= 1
 
 driver.save_screenshot('./result/signup_case_1_1.png')
 
-if errormsg.text != "Please type your first name.":
+if errormsg.text != msgtext:
 	result = False
-	f.write('(WRONG ERROR MESSAGE)')
+	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
 
 f.write('\n')
 
@@ -60,14 +61,15 @@ signup_button.click()
 f.write(str(step_num)+'. '+'Click the Sign Up button\n')
 step_num+= 1
 
-f.write(str(step_num)+'. '+'Verify the error message (Please type your family name.) ')
+msgtext = "Please type your family name."
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
 step_num+= 1
 
 driver.save_screenshot('./result/signup_case_1_2.png')
 
-if errormsg.text != "Please type your family name.":
+if errormsg.text != msgtext:
 	result = False
-	f.write('(WRONG ERROR MESSAGE)')
+	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
 
 f.write('\n')
 
@@ -80,14 +82,15 @@ signup_button.click()
 f.write(str(step_num)+'. '+'Click the Sign Up button\n')
 step_num+= 1
 
-f.write(str(step_num)+'. '+'Verify the error message (Please select your gender.)')
+msgtext = "Please select your gender."
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
 step_num+= 1
 
 driver.save_screenshot('./result/signup_case_1_3.png')
 
-if errormsg.text != "Please select your gender.":
+if errormsg.text != msgtext:
 	result = False
-	f.write('(WRONG ERROR MESSAGE)')
+	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
 
 f.write('\n')
 
@@ -100,14 +103,15 @@ signup_button.click()
 f.write(str(step_num)+'. '+'Click the Sign Up button\n')
 step_num+= 1
 
-f.write(str(step_num)+'. '+'Verify the error message (Please type your city.) ')
+msgtext = "Please type your city."
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
 step_num+= 1
 
 driver.save_screenshot('./result/signup_case_1_4.png')
 
-if errormsg.text != "Please type your city.":
+if errormsg.text != msgtext:
 	result = False
-	f.write('(WRONG ERROR MESSAGE)')
+	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
 
 f.write('\n')
 
@@ -120,14 +124,15 @@ signup_button.click()
 f.write(str(step_num)+'. '+'Click the Sign Up button\n')
 step_num+= 1
 
-f.write(str(step_num)+'. '+'Verify the error message (Please type your country.)')
+msgtext = "Please type your country."
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
 step_num+= 1
 
 driver.save_screenshot('./result/signup_case_1_5.png')
 
-if errormsg.text != "Please type your country.":
+if errormsg.text != msgtext:
 	result = False
-	f.write('(WRONG ERROR MESSAGE)')
+	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
 
 f.write('\n')
 
@@ -140,14 +145,15 @@ signup_button.click()
 f.write(str(step_num)+'. '+'Click the Sign Up button\n')
 step_num+= 1
 
-f.write(str(step_num)+'. '+'Verify the error message (Please type your email.)')
+msgtext = "Please type your email."
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
 step_num+= 1
 
 driver.save_screenshot('./result/signup_case_1_6.png')
 
-if errormsg.text != "Please type your email.":
+if errormsg.text != msgtext:
 	result = False
-	f.write('(WRONG ERROR MESSAGE)')
+	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
 
 f.write('\n')
 
@@ -160,14 +166,15 @@ signup_button.click()
 f.write(str(step_num)+'. '+'Click the Sign Up button\n')
 step_num+= 1
 
-f.write(str(step_num)+'. '+'Verify the error message (Please type your password.)')
+msgtext = "Please type your password."
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
 step_num+= 1
 
 driver.save_screenshot('./result/signup_case_1_7.png')
 
-if errormsg.text != "Please type your password.":
+if errormsg.text != msgtext :
 	result = False
-	f.write('(WRONG ERROR MESSAGE)')
+	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
 
 f.write('\n')
 
@@ -180,14 +187,16 @@ signup_button.click()
 f.write(str(step_num)+'. '+'Click the Sign Up button\n')
 step_num+= 1
 
-f.write(str(step_num)+'. '+'Verify the error message (Please confirm your password.)')
+msgtext = "Please confirm your password."
+
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
 step_num+= 1
 
 driver.save_screenshot('./result/signup_case_1_8.png')
 
-if errormsg.text != "Please confirm your password.":
+if errormsg.text != msgtext:
 	result = False
-	f.write('(WRONG ERROR MESSAGE)')
+	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
 
 f.write('\n')
 
@@ -201,14 +210,18 @@ f.write(str(step_num)+'. '+'Click the Sign Up button\n')
 step_num+= 1
 
 # Sign up successfully
-f.write(str(step_num)+'. '+'Sign up a new user (Successfully created a new user.)')
+msgtext = "Successfully created a new user."
+msgtext2 = "You may try your first login."
+
+f.write(str(step_num)+'. '+'Sign up a new user - '+msgtext)
 step_num+= 1
 
 driver.save_screenshot('./result/signup_case_1_9.png')
 
-if errormsg.text != "Successfully created a new user.":
+loginmsg = driver.find_element_by_id("loginmsg")
+if errormsg.text != msgtext or loginmsg.text != msgtext2:
 	result = False
-	f.write('(WRONG ERROR MESSAGE)')
+	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
 
 f.write('\n')
 

@@ -12,9 +12,9 @@ driver = webdriver.Chrome()
 # Test Case Information
 result = True
 step_num = 1
-f = common.createFileObj('signup_case_2')
-scenario = 'Scenario: Sign up a existing user'
-precondition = 'Pre-condition: The user already signed up'
+f = common.createFileObj('signup_case_4')
+scenario = 'Scenario: Sign up with password validation'
+precondition = 'Pre-condition: The user did not sign up before'
 common.printTitle(f, scenario, precondition)
 
 # Go to Twidder
@@ -37,11 +37,16 @@ familyname.send_keys("dummy")
 gender.select_by_visible_text("Male")
 city.send_keys("HK")
 country.send_keys("HK")
-email.send_keys("dummy@gmail.com")
-password.send_keys("abcd1234")
-repeatpsw.send_keys("abcd1234")
+email.send_keys("dummy1@gmail.com")
 
 f.write(str(step_num)+'. '+'Fill in all signup information\n')
+step_num+= 1
+
+# Fill in the password (not fulfil the min length of characters)
+password.send_keys("abcd123")
+repeatpsw.send_keys("abcd1234")
+
+f.write(str(step_num)+'. '+'Fill in the password less than 8 characters\n')
 step_num+= 1
 
 signup_button = driver.find_element_by_id("btn_signup")
@@ -50,14 +55,39 @@ f.write(str(step_num)+'. '+'Click the Sign Up button\n')
 step_num+= 1
 
 # Error message is expected
-driver.save_screenshot('./result/signup_case_2_1.png')
+driver.save_screenshot('./result/signup_case_4_1.png')
 errormsg = driver.find_element_by_id("errormsgSignUp")
-
-msgtext = "User already exists."
+msgtext = "The password should have at least 8 characters."
 f.write(str(step_num)+'. '+'Verify error message - '+msgtext)
 step_num+= 1
 
 if errormsg.text != msgtext:
+	result = False
+	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
+
+f.write('\n')
+
+# Fill in a different password in repeatPSW
+password.clear()
+repeatpsw.clear()
+password.send_keys("abcd1234")
+repeatpsw.send_keys("qwer1234")
+
+f.write(str(step_num)+'. '+'Fill in the different password in repeatPSW \n')
+step_num+= 1
+
+
+signup_button.click()
+f.write(str(step_num)+'. '+'Click the Sign Up button\n')
+step_num+= 1
+
+driver.save_screenshot('./result/signup_case_4_2.png')
+msgtext = "The password must be the same."
+
+f.write(str(step_num)+'. '+'Verify error message - '+msgtext)
+step_num+= 1
+
+if errormsg.text != msgtext :
 	result = False
 	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
 

@@ -11,9 +11,9 @@ driver=webdriver.Chrome()
 # Test Case Information
 result = True
 step_num = 1
-f = common.createFileObj('signin_case_1')
-scenario = 'Scenario: Sign in successfully'
-precondition = 'Pre-condition: The user did not sign in before'
+f = common.createFileObj('postMsg_case_1')
+scenario = 'Scenario: Post a message in home tab'
+precondition = 'Pre-condition: The user signed in'
 common.printTitle(f, scenario, precondition)
 
 # Go to Twidder
@@ -46,7 +46,7 @@ WebDriverWait(driver, 90).until(element_present)
 f.write(str(step_num)+'. '+'Go to the profile view\n')
 step_num+= 1
 
-driver.save_screenshot('./result/signin_case_1_1.png')
+driver.save_screenshot('./result/postmsg_case_1_1.png')
 	
 # To make sure if the user is as same as sign in username
 email = driver.find_element_by_name("home_personalInfo_email")
@@ -57,6 +57,45 @@ if email.text != "abc@abc":
 	result = False
 	f.write('(WRONG USER): '+ email.text)
 f.write('\n')
+
+# Post message to own profile
+postbox = driver.find_element_by_name("postArea")
+post_button = driver.find_element_by_id("btn_post_home")
+
+content = "Testing on 10 Mar 2018"
+postbox.send_keys(content)
+f.write(str(step_num)+'. '+'Write the message in the post area\n')
+step_num+= 1
+
+post_button.click()
+
+# Feedback is expected from the server
+feedback = driver.find_element_by_id("errormsgPostWall_home")
+msgtext = "Message posted."
+f.write(str(step_num)+'. '+'Receive the feedback from the server - '+msgtext)
+step_num+= 1
+
+driver.save_screenshot('./result/postmsg_case_1_2.png')
+
+if feedback.text != msgtext:
+	result = False
+	f.write('(UNEXPECTED FEEDBACK): '+ feedback.text)
+f.write('\n')
+
+# The latest message is displayed on the wall automatically
+writer = driver.find_element_by_xpath("//*[@id=\"msgWall\"]/div[1]")
+postedMsg = driver.find_element_by_xpath("//*[@id=\"msgWall\"]/div[2]")
+
+driver.save_screenshot('./result/postmsg_case_1_3.png')
+
+f.write(str(step_num)+'. '+'The latest message is displayed on the wall ')
+step_num+= 1
+if writer.text!= "From: abc@abc" or postedMsg.text != content:
+	result = False
+	f.write('(MESSAGE IS OUTDATED)')
+f.write('\n')
+f.write(writer.text + '\n')
+f.write(postedMsg.text + '\n')
 
 # End of the test
 driver.quit()

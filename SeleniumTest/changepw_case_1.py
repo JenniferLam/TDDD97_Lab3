@@ -11,9 +11,9 @@ driver=webdriver.Chrome()
 # Test Case Information
 result = True
 step_num = 1
-f = common.createFileObj('signin_case_1')
-scenario = 'Scenario: Sign in successfully'
-precondition = 'Pre-condition: The user did not sign in before'
+f = common.createFileObj('changepw_case_1')
+scenario = 'Scenario: Change password with old password'
+precondition = 'Pre-condition: The user signed in'
 common.printTitle(f, scenario, precondition)
 
 # Go to Twidder
@@ -46,7 +46,7 @@ WebDriverWait(driver, 90).until(element_present)
 f.write(str(step_num)+'. '+'Go to the profile view\n')
 step_num+= 1
 
-driver.save_screenshot('./result/signin_case_1_1.png')
+driver.save_screenshot('./result/changepw_case_1_1.png')
 	
 # To make sure if the user is as same as sign in username
 email = driver.find_element_by_name("home_personalInfo_email")
@@ -55,7 +55,42 @@ step_num+= 1
 
 if email.text != "abc@abc":
 	result = False
-	f.write('(WRONG USER): '+ email.text)
+	f.write('(WRONG USER): '+email.text)
+f.write('\n')
+
+# Go to account tab
+account_tab = driver.find_element_by_id("tab_account")
+account_tab.click()
+f.write(str(step_num)+'. '+'Go to Account Tab\n')
+step_num+= 1
+
+oldPW = driver.find_element_by_name("oldPW")
+newPW = driver.find_element_by_name("newPW")
+confirmPW = driver.find_element_by_name("confirmPW")
+
+# Fill in wrong old password
+oldPW.send_keys("abce1234")
+newPW.send_keys("qwer1234")
+confirmPW.send_keys("qwer1234")
+f.write(str(step_num)+'. '+'Fill in wrong old password\n')
+step_num+= 1
+
+changePW_button = driver.find_element_by_id("changePWBtn")
+changePW_button.click()
+f.write(str(step_num)+'. '+'Click the ChangePW button\n')
+step_num+= 1
+
+driver.save_screenshot('./result/changepw_case_1_2.png')
+
+errormsg = driver.find_element_by_id("errormsgPW")
+msgtext = "Wrong password."
+
+f.write(str(step_num)+'. '+'Verify the error message - ')
+step_num+= 1
+
+if errormsg.text != msgtext:
+	result = False
+	f.write('(WRONG ERROR MESSAGE): '+ errormsg.text)
 f.write('\n')
 
 # End of the test

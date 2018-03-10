@@ -11,9 +11,9 @@ driver=webdriver.Chrome()
 # Test Case Information
 result = True
 step_num = 1
-f = common.createFileObj('signin_case_1')
-scenario = 'Scenario: Sign in successfully'
-precondition = 'Pre-condition: The user did not sign in before'
+f = common.createFileObj('searchUser_case_1')
+scenario = 'Scenario: Search non-exist user in browse tab'
+precondition = 'Pre-condition: The user signed in'
 common.printTitle(f, scenario, precondition)
 
 # Go to Twidder
@@ -46,7 +46,7 @@ WebDriverWait(driver, 90).until(element_present)
 f.write(str(step_num)+'. '+'Go to the profile view\n')
 step_num+= 1
 
-driver.save_screenshot('./result/signin_case_1_1.png')
+driver.save_screenshot('./result/searchuser_case_1_1.png')
 	
 # To make sure if the user is as same as sign in username
 email = driver.find_element_by_name("home_personalInfo_email")
@@ -58,9 +58,41 @@ if email.text != "abc@abc":
 	f.write('(WRONG USER): '+ email.text)
 f.write('\n')
 
+# Go to browse tab
+browse_tab = driver.find_element_by_id("tab_browse")
+browse_tab.click()
+f.write(str(step_num)+'. '+'Go to Browse Tab\n')
+step_num+= 1
+
+# Search with non-exist email address
+searchBar = driver.find_element_by_name("searchEmail")
+target_user = "xxxx"
+searchBar.send_keys(target_user)
+f.write(str(step_num)+'. '+'Type a non-exist email address\n')
+step_num+= 1
+
+search_button = driver.find_element_by_id("searchBtn")
+search_button.click()
+f.write(str(step_num)+'. '+'Click the Search Button\n')
+step_num+= 1
+
+msgtext = "No such user."
+driver.save_screenshot('./result/searchuser_case_1_2.png')
+
+f.write(str(step_num)+'. '+'Verify error message - '+msgtext)
+step_num+= 1
+
+errormsg = driver.find_element_by_id("errorMsgSearch")
+if errormsg.text != msgtext:
+	result = False
+	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
+f.write('\n')
+
 # End of the test
 driver.quit()
 f.write(str(step_num)+'. '+'Close the browser\n\n')
 step_num+= 1
 common.printTestResult(f,result)
 f.close()
+
+

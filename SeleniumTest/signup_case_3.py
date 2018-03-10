@@ -12,9 +12,9 @@ driver = webdriver.Chrome()
 # Test Case Information
 result = True
 step_num = 1
-f = common.createFileObj('signup_case_2')
-scenario = 'Scenario: Sign up a existing user'
-precondition = 'Pre-condition: The user already signed up'
+f = common.createFileObj('signup_case_3')
+scenario = 'Scenario: Sign up with invalid email format'
+precondition = 'Pre-condition: The user did not sign up before'
 common.printTitle(f, scenario, precondition)
 
 # Go to Twidder
@@ -37,11 +37,11 @@ familyname.send_keys("dummy")
 gender.select_by_visible_text("Male")
 city.send_keys("HK")
 country.send_keys("HK")
-email.send_keys("dummy@gmail.com")
+email.send_keys("dummy1gmail.com")
 password.send_keys("abcd1234")
 repeatpsw.send_keys("abcd1234")
 
-f.write(str(step_num)+'. '+'Fill in all signup information\n')
+f.write(str(step_num)+'. '+'Fill in all signup information with invalid email\n')
 step_num+= 1
 
 signup_button = driver.find_element_by_id("btn_signup")
@@ -50,11 +50,53 @@ f.write(str(step_num)+'. '+'Click the Sign Up button\n')
 step_num+= 1
 
 # Error message is expected
-driver.save_screenshot('./result/signup_case_2_1.png')
+driver.save_screenshot('./result/signup_case_3_1.png')
 errormsg = driver.find_element_by_id("errormsgSignUp")
+msgtext = "Please type valid email address."
 
-msgtext = "User already exists."
 f.write(str(step_num)+'. '+'Verify error message - '+msgtext)
+step_num+= 1
+
+if errormsg.text != msgtext:
+	result = False
+	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
+
+f.write('\n')
+
+email.clear()
+email.send_keys("@dummy1gmail.com")
+f.write(str(step_num)+'. '+'Fill in another invalid email format\n')
+step_num+= 1
+
+
+signup_button.click()
+f.write(str(step_num)+'. '+'Click the Sign Up button\n')
+step_num+= 1
+
+driver.save_screenshot('./result/signup_case_3_2.png')
+msgtext = "Please type valid email address."
+f.write(str(step_num)+'. '+'Verify error message - '+msgtext)
+step_num+= 1
+
+if errormsg.text != msgtext:
+	result = False
+	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
+
+f.write('\n')
+
+email.clear()
+email.send_keys("dummy1gmail.com@")
+f.write(str(step_num)+'. '+'Fill in another invalid email format\n')
+step_num+= 1
+
+
+signup_button.click()
+f.write(str(step_num)+'. '+'Click the Sign Up button\n')
+step_num+= 1
+
+driver.save_screenshot('./result/signup_case_3_3.png')
+msgtext = "Please type valid email address."
+f.write(str(step_num)+'. '+'Verify error message ' + msgtext)
 step_num+= 1
 
 if errormsg.text != msgtext:

@@ -12,9 +12,9 @@ driver = webdriver.Chrome()
 # Test Case Information
 result = True
 step_num = 1
-f = common.createFileObj('signup_case_2')
-scenario = 'Scenario: Sign up a existing user'
-precondition = 'Pre-condition: The user already signed up'
+f = common.createFileObj('signup_case_5')
+scenario = 'Scenario: Sign up successfully'
+precondition = 'Pre-condition: The user did not sign up before'
 common.printTitle(f, scenario, precondition)
 
 # Go to Twidder
@@ -37,27 +37,31 @@ familyname.send_keys("dummy")
 gender.select_by_visible_text("Male")
 city.send_keys("HK")
 country.send_keys("HK")
-email.send_keys("dummy@gmail.com")
+email.send_keys("dummy3@gmail.com")
 password.send_keys("abcd1234")
 repeatpsw.send_keys("abcd1234")
 
 f.write(str(step_num)+'. '+'Fill in all signup information\n')
 step_num+= 1
 
+driver.save_screenshot('./result/signup_case_5_1.png')
+
 signup_button = driver.find_element_by_id("btn_signup")
 signup_button.click()
 f.write(str(step_num)+'. '+'Click the Sign Up button\n')
 step_num+= 1
 
-# Error message is expected
-driver.save_screenshot('./result/signup_case_2_1.png')
-errormsg = driver.find_element_by_id("errormsgSignUp")
+# Feedback from server
+msgtext = "Successfully created a new user."
+msgtext2 = "You may try your first login."
 
-msgtext = "User already exists."
-f.write(str(step_num)+'. '+'Verify error message - '+msgtext)
+f.write(str(step_num)+'. '+'Sign up a new user - '+msgtext)
 step_num+= 1
 
-if errormsg.text != msgtext:
+errormsg = driver.find_element_by_id("errormsgSignUp")
+loginmsg = driver.find_element_by_id("loginmsg")
+
+if errormsg.text != msgtext or loginmsg.text != msgtext2:
 	result = False
 	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
 
