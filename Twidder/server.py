@@ -142,10 +142,10 @@ def get_user_data_by_token(token = None):
 	# Return the user profile
 	data = database_helper.find_user(email)
 	return json.dumps({"success": True, "message": "User data retrieved.", "data": [dict(x) for x in data]}),200
-		
+
+@app.route('/getUserDataByEmail/<token>/', defaults={'email':""}, methods=['GET'])	
 @app.route('/getUserDataByEmail/<token>/<email>', methods=['GET'])
 def get_user_data_by_email(token = None, email=None):
-	
 	if token is None or email is None:
 		return json.dumps({"success": False, "message":"Key error."}),400
 

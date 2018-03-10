@@ -489,6 +489,7 @@ searchUser = function(form){
     var email = form.searchEmail.value;
     var currentToken = localStorage.getItem("token");
 
+
     con.open("GET",'/getUserDataByEmail/'+currentToken+"/"+email,true);
 
     con.onreadystatechange = function(){
