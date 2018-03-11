@@ -153,7 +153,7 @@
                                 <h3>Total no. of online users:</h3>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md">
                                 <div id="numUsers"></div>
@@ -240,7 +240,7 @@
                         
                         <div class="row">
                             <div class="col-md-12">
-                                <button type="submit" class="btn btn-default">Post</button>
+                                <button type="submit" class="btn btn-default" id = "btn_post_home">Post</button>
                                 <span id="errormsgPostWall_home" class="error"></span>
                             </div>
                         </div>
@@ -325,7 +325,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <button type="submit" class="btn btn-danger" onclick="return signOut()">Sign Out</button>
+                            <button type="submit" class="btn btn-danger" onclick="return signOut()" id = "btn_signout">Sign Out</button>
                         </div>
                     </div>
                 </div>
@@ -346,13 +346,13 @@
         <form id="postMsgForm_browse" action="" method="post" onsubmit="return postMsg('browse', this)">
             <div class="row">
                 <div class="col-md-12">
-                    <textarea rows="6" name="postArea" class="postBox" onfocus="return clearMsg('errormsgPostWall_browse')"></textarea>
+                    <textarea rows="6" name="postArea" class="postBox" onfocus="return clearMsg('errormsgPostWall_browse')" id="postBox_browse"></textarea>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <button type="submit" class="btn btn-default">Post</button>
-                    <span id="errormsgPostWall_browse"></span>
+                    <button type="submit" class="btn btn-default" id="btn_post_browse">Post</button>
+                    <span id="errormsgPostWall_browse" class="error"></span>
                 </div>
             </div>
         </form>

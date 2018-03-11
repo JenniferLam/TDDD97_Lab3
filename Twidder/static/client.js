@@ -1,27 +1,78 @@
-displayView = function(){
-    // the code required to display a view
-    // If the token exists in local storage, then display the profile view directly
-    if (localStorage.getItem("token") == null) {
-        document.getElementById("container").innerHTML = document.getElementById("welcomeview").innerHTML;
-    }else{
-        document.getElementById("container").innerHTML = document.getElementById("profileview").innerHTML;
-        // Once the user leaves a tab for a while and comes back to it, the data in the tab shall be
-        // preserved without asking the server stub again.
-        loadPersonalProfile();
-        retrieveMsg('home');
-	
+var ws;
+window.onbeforeunload = function(){
+    currentEmail = localStorage.getItem("email");
+    currentToken = localStorage.getItem("token");
+
+    var closeBrowse = {
+        "type": "unload",
+        "email": currentEmail,
+        "token": currentToken
     }
+
+    ws.send(JSON.stringify(closeBrowse));
+    //ws.close();
 }
 
 window.onload =function(){
+    loadWebSoc();
+}
+
+loadWebSoc = function(){
+    token = localStorage.getItem("token");
+    email = localStorage.getItem("email");
+    if ( token != null) {
+        var con = new XMLHttpRequest();
+
+        con.open("GET",'/getUserDataByToken/'+token,true);
+
+        con.onreadystatechange = function(){
+            if (con.readyState == 4){
+                var response = JSON.parse(con.responseText);
+                if (con.status == 200){
+                        ws = new WebSocket("ws://" + document.domain + ":5000/websoc");
+                        var reload = {
+                            "type":"reload",
+                            "email": email,
+                            "token": token
+                        }
+                        ws.onopen = function (){
+                            ws.send(JSON.stringify(reload));
+                        }
+                    } else {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('email');
+                    
+                }
+            }
+        };
+        con.send(null);
+    }
+
     displayView();
+
+}
+
+displayView = function(){
+    // the code required to display a view
+    // If the token exists in local storage, then display the profile view directly
+    token = localStorage.getItem("token");
+
+    if ( token == null) {
+        document.getElementById("container").innerHTML = document.getElementById("welcomeview").innerHTML;
+    }else{        
+        document.getElementById("container").innerHTML = document.getElementById("profileview").innerHTML;
+        loadPersonalProfile();
+        retrieveMsg('home');
+    }
 }
 
 signInWebSocket = function(){
     currentEmail = localStorage.getItem("email");
     currentToken = localStorage.getItem("token");
     ws = new WebSocket("ws://" + document.domain + ":5000/websoc");
+    
     var signInUser = {
+        "type": "signin",
         "email" : currentEmail,
         "token" : currentToken
     }
@@ -32,56 +83,25 @@ signInWebSocket = function(){
 
     // Receive the message from the websocket
     ws.onmessage = function (message) {
-		if (message.data == "SignOut"){
+        message = JSON.parse(message.data);
+
+		if (message.type == "autoSignOut" && message.value == "SignOut"){
             localStorage.removeItem("token");
             localStorage.removeItem("email");
             displayView();
-        } else {
-            document.getElementById("numUsers").innerHTML = message.data;
+            //ws.close();
+        } 
+        if (message.type == "updateUserCnt"){
+            document.getElementById("numUsers").innerHTML = message.value;
         }
-        
+        if (message.type == "postmsg"){
+            document.getElementById("numPost").innerHTML = message.value;
+
+        }
                 
     };
 }
 
-postMsgWebSocket = function(email){
-    currentEmail = localStorage.getItem("email");
-    toEmail = email
-    ws_2 = new WebSocket("ws://" + document.domain + ":5000/numOfPost");
-    
-    // Connect and send the email and token to the websocket
-    var postMsgForm = {
-        "writer": currentEmail,
-        "toEmail": toEmail
-    }    
-
-    ws_2.onopen = function(){
-        ws_2.send(JSON.stringify((postMsgForm)));
-    }
-
-    // Receive the message from the websocket
-    ws_2.onmessage = function (message) {
-        message = JSON.parse(message.data);
-        // Update the number of posts
-        document.getElementById("numPost").innerHTML = message.NumOfPost;
-    };
-
-}
-
-onlineUserWebSocket = function(){
-    ws_3 = new WebSocket("ws://" + document.domain + ":5000/onlineUser");
-    currentEmail = localStorage.getItem("email");
-    // Connect and send the email and token to the websocket
-    ws_3.onopen = function(){
-       ws_3.send(currentEmail)
-    }
-
-    // Receive the message from the websocket
-    ws_3.onmessage = function (message) {
-        document.getElementById("numUsers").innerHTML = message.data;
-    };
-
-}
 
 signInValidator = function(form){
  
@@ -122,10 +142,8 @@ signInValidator = function(form){
                 // Save the email and token to local storage
                 localStorage.setItem("token",responseMsg.data);
 				localStorage.setItem("email",form.email.value);
+                signInWebSocket(); 
                 displayView();
-                // Connect ws and trigger auto-signout checking
-				signInWebSocket(); 
-                postMsgWebSocket(form.email.value);
             } else {
                 document.getElementById('errormsgSignIn').innerHTML = responseMsg.message;
 				$("#errormsgSignIn").parent().effect("bounce", {times:3}, 300);
@@ -382,8 +400,8 @@ changePassword = function(form){
 
 // Sign out function in Account Tab
 signOut = function(){
-    var currentToken =  localStorage.getItem("token");
-
+    var currentToken = localStorage.getItem("token");
+    var currentEmail = localStorage.getItem("email");
     var con = new XMLHttpRequest();
     con.open("POST",'/signout',true);
 
@@ -391,10 +409,18 @@ signOut = function(){
         if (con.readyState == 4){
             var responseMsg = JSON.parse(con.responseText);
             if (con.status==200){
-                onlineUserWebSocket();
+                //onlineUserWebSocket();
+                var signOut = {
+                    "type": "signout",
+                    "email": currentEmail,
+                    "token": currentToken
+                }
+                ws.send(JSON.stringify(signOut));
                 localStorage.removeItem("token");
 				localStorage.removeItem("email");
                 displayView();
+
+                //ws.close();
             }
         }
     }
@@ -446,6 +472,7 @@ loadPersonalProfile = function(){
             var response = JSON.parse(con.responseText);
             if (con.status == 200){
                 var data = response.data;
+                document.getElementById("numPost").innerHTML = response.NumOfPost;
                 document.getElementsByName("home_personalInfo_email")[0].innerHTML = data[0]['email'];
                 document.getElementsByName("home_personalInfo_firstname")[0].innerHTML = data[0]['firstname'];
                 document.getElementsByName("home_personalInfo_familyname")[0].innerHTML = data[0]['familyname'];
@@ -490,7 +517,12 @@ postMsg = function(tab, form){
             if (con.status == 200){
                form.reset();
                retrieveMsg(tab); 
-               postMsgWebSocket(email);
+               var postMsg = {
+                    "type": "postmsg",
+                    "email": email,
+                    "token": currentToken
+               }
+               ws.send(JSON.stringify(postMsg));
             } 
             document.getElementById("errormsgPostWall_"+tab).innerHTML = response.message;
         }

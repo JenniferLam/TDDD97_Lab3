@@ -13,8 +13,7 @@ app.debug = True
 # One web socket for one user
 # Email is the key
 loggedUsers = {}
-postMsgUsers = {}
-
+num_onlineuser = 0
 
 @app.before_request
 def before_request():
@@ -31,6 +30,7 @@ def root():
 
 @app.route('/websoc',methods=['GET'])
 def webSocket():
+	global num_onlineuser
 	if request.environ.get('wsgi.websocket'):
 		ws = request.environ['wsgi.websocket']
 		while True:
@@ -38,65 +38,90 @@ def webSocket():
 			message = ws.receive()
 			if message:
 				message = json.loads(message)
+				msgtype = str(message['type'])
 				email = str(message['email'])
 				token = str(message['token'])
+
+				# Sign in
+				if msgtype == "signin":
+					num_onlineuser += 1
+					# Extract the ws if the user signed in before
+					if email in loggedUsers:
+						tmp_ws = loggedUsers[email]
+					else:
+						tmp_ws = ""
+
+					# If the user did their second signin, 
+					# then remove the token and redirect to welcome page in first sign in browser
+					if tmp_ws != "":
+						num_onlineuser -= 1 
+						tmp_ws.send(json.dumps({"type":"autoSignOut", "value":"SignOut"}))
+
+					# Store the latest ws in the dict
+					loggedUsers[email] = ws
 				
-				# Extract the ws if the user signed in before
-				if email in loggedUsers:
-					tmp_ws = loggedUsers[email]
-				else:
-					tmp_ws = ""
+				# Refresh the page
+				elif msgtype == "reload":
+					num_onlineuser += 1
+					loggedUsers[email] = ws
 
-				# If the user did their second signin, 
-				# then remove the token and redirect to welcome page in first sign in browser
-				if tmp_ws != "":
-					tmp_ws.send("SignOut")
+				# Close the browser
+				elif msgtype == "unload":
+					num_onlineuser -= 1
+					loggedUsers[email] = ""
+					
+				# Sign out
+				elif msgtype == "signout":
+					loggedUsers[email] = ""
+					num_onlineuser -= 1
 
-				# Store the latest ws in the dict
-				loggedUsers[email] = ws
+				# Update the total number of posts
+				elif msgtype == "postmsg":
+					num = database_helper.get_num_post(email)
+					if email in loggedUsers and loggedUsers[email] != "":
+						loggedUsers[email].send(json.dumps({"type":"postmsg", "value":str(num)}))
+				
+				# Update the total number of online users	
+				if msgtype != "postmsg":
+					for l in loggedUsers:
+						tmp_ws = loggedUsers[l]
+						if  tmp_ws != "":
+							tmp_ws.send(json.dumps({"type":"updateUserCnt", "value":str(num_onlineuser)}))
 
-				num = database_helper.get_num_onlineuser()
-				for l in loggedUsers:
-					ws_2 = loggedUsers[l]
-					if ws_2 != "":
-						ws_2.send(str(num))
 	return 
 
-@app.route('/numOfPost', methods=['GET'])
-def get_noOfPost():
-	if request.environ.get('wsgi.websocket'):
-		ws = request.environ['wsgi.websocket']
-		while True:
-			message = ws.receive()
-			message = json.loads(message)
-			currentEmail = str(message['writer'])
-			toEmail = str(message['toEmail'])
+# @app.route('/numOfPost', methods=['GET'])
+# def get_noOfPost():
+# 	if request.environ.get('wsgi.websocket'):
+# 		ws = request.environ['wsgi.websocket']
+# 		while True:
+# 			message = ws.receive()
+# 			message = json.loads(message)
+# 			currentEmail = str(message['writer'])
+# 			toEmail = str(message['toEmail'])
 
-			num = database_helper.get_num_post(toEmail)
+# 			num = database_helper.get_num_post(toEmail)
 
-			if (currentEmail == toEmail):
-				# Replace with a new ws 
-				postMsgUsers[currentEmail] = ws
-				ws.send(json.dumps({"toEmail": toEmail, "NumOfPost": num}))
-			else:
-				# Find the ws of toEmail and inform the toEmail to update the number
-				tmp_ws = postMsgUsers[toEmail]
-				tmp_ws.send(json.dumps({"toEmail": toEmail, "NumOfPost": num}))
+# 			if (currentEmail == toEmail):
+# 				# Replace with a new ws 
+# 				postMsgUsers[currentEmail] = ws
+# 				ws.send(json.dumps({"toEmail": toEmail, "NumOfPost": num}))
+# 			else:
+# 				# Find the ws of toEmail and inform the toEmail to update the number
+# 				tmp_ws = postMsgUsers[toEmail]
+# 				tmp_ws.send(json.dumps({"toEmail": toEmail, "NumOfPost": num}))
 
-	return
+# 	return
 
-@app.route('/onlineUser', methods=['GET'])
-def get_noOfOnlineUser():
-	if request.environ.get('wsgi.websocket'):
-		ws = request.environ['wsgi.websocket']
-		while True:
-			message = ws.receive()
-			num = database_helper.get_num_onlineuser()
-			for l in loggedUsers:
-				ws_2 = loggedUsers[l]
-				if (ws_2 != ""):
-					ws_2.send(str(num))
-	return
+# @app.route('/getWebSocByToken/<token>',methods=['GET'])
+# def get_ws_by_token(token = None):
+# 	global num_onlineuser
+# 	email = database_helper.get_emailByToken(token)
+# 	if email in loggedUsers and loggedUsers[email] != "":
+# 		num_onlineuser+=1
+# 		return loggedUsers[email]
+# 	return ""
+
 
 @app.route('/signin', methods=['POST'])
 def sign_in():
@@ -164,8 +189,6 @@ def sign_out():
 
 	database_helper.delete_token(token)
 
-	# Clear the ws in the websocket dict
-	loggedUsers[is_there] = ""
 
 	return json.dumps({"success": True, "message":"Successfully signed out"}),200
 
@@ -186,7 +209,8 @@ def get_user_data_by_token(token = None):
 	
 	# Return the user profile
 	data = database_helper.find_user(email)
-	return json.dumps({"success": True, "message": "User data retrieved.", "data": [dict(x) for x in data]}),200
+	numOfPost = database_helper.get_num_post(email)
+	return json.dumps({"success": True, "message": "User data retrieved.", "data": [dict(x) for x in data], "NumOfPost":str(numOfPost)}),200
 
 @app.route('/getUserDataByEmail/<token>/', defaults={'email':""}, methods=['GET'])	
 @app.route('/getUserDataByEmail/<token>/<email>', methods=['GET'])

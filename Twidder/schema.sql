@@ -21,19 +21,19 @@ token char(50) not null
 );
 
 insert into userprofile (email, firstname, familyname, gender, city, country, password)
-values ("tcpsawingting@gmail.com", "Wing Ting", "Lam", "Female", "HK", "HK", "abcd1234");	
+values ("abc@abc", "abc", "abc", "Female", "HK", "HK", "abcd1234");	
 
 
 insert into userprofile (email, firstname, familyname, gender, city, country, password)
-values ("abc@abc", "ABC", "ABC", "Female", "HK", "HK", "abcd1234");	
+values ("def@def", "def", "def", "Female", "HK", "HK", "abcd1234");	
 
 
 insert into message (toemail, fromemail, content)
-values ("abc@abc","tcpsawingting@gmail.com", "Hello World");
+values ("abc@abc","def@def", "Hello World");
 insert into message (toemail, fromemail, content)
-values ("abc@abc","tcpsawingting@gmail.com", "Hello World 2");
+values ("abc@abc","def@def", "Hello World 2");
 insert into message (toemail, fromemail, content)
-values ("abc@abc","tcpsawingting@gmail.com", "Hello World 3");
+values ("abc@abc","def@def", "Hello World 3");
 insert into message (toemail, fromemail, content)
 values ("abc@abc","abc@abc", "Hello World");
 insert into message (toemail, fromemail, content)
@@ -41,11 +41,11 @@ values ("abc@abc","abc@abc", "Hello World 2");
 insert into message (toemail, fromemail, content)
 values ("abc@abc","abc@abc", "Hello World 3");
 insert into message (toemail, fromemail, content)
-values ("tcpsawingting@gmail.com","abc@abc", "Hello World");
+values ("def@def","abc@abc", "Hello World");
 insert into message (toemail, fromemail, content)
-values ("tcpsawingting@gmail.com","abc@abc", "Hello World 2");
+values ("def@def","abc@abc", "Hello World 2");
 insert into message (toemail, fromemail, content)
-values ("tcpsawingting@gmail.com","abc@abc", "Hello World 3");
+values ("def@def","abc@abc", "Hello World 3");
 
 
 
