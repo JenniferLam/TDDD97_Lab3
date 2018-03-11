@@ -2,9 +2,9 @@ displayView = function(){
     // the code required to display a view
     // If the token exists in local storage, then display the profile view directly
     if (localStorage.getItem("token") == null) {
-        document.getElementById("startpage").innerHTML = document.getElementById("welcomeview").innerHTML;
+        document.getElementById("container").innerHTML = document.getElementById("welcomeview").innerHTML;
     }else{
-        document.getElementById("startpage").innerHTML = document.getElementById("profileview").innerHTML;
+        document.getElementById("container").innerHTML = document.getElementById("profileview").innerHTML;
         // Once the user leaves a tab for a while and comes back to it, the data in the tab shall be
         // preserved without asking the server stub again.
         loadPersonalProfile();
@@ -36,38 +36,44 @@ signInWebSocket = function(){
             localStorage.removeItem("token");
             localStorage.removeItem("email");
             displayView();
+        } else {
+            document.getElementById("numUsers").innerHTML = message.data;
         }
-        document.getElementById("numUsers").innerHTML = message.data;
+        
                 
     };
 }
 
-postMsgWebSocket = function(){
+postMsgWebSocket = function(email){
     currentEmail = localStorage.getItem("email");
+    toEmail = email
     ws_2 = new WebSocket("ws://" + document.domain + ":5000/numOfPost");
     
     // Connect and send the email and token to the websocket
+    var postMsgForm = {
+        "writer": currentEmail,
+        "toEmail": toEmail
+    }    
+
     ws_2.onopen = function(){
-        ws_2.send(currentEmail);
+        ws_2.send(JSON.stringify((postMsgForm)));
     }
 
     // Receive the message from the websocket
     ws_2.onmessage = function (message) {
         message = JSON.parse(message.data);
-        if (message.toEmail == currentEmail){
-            // Update the number of posts
-            document.getElementById("numPost").innerHTML = message.NumOfPost;
-        }
+        // Update the number of posts
+        document.getElementById("numPost").innerHTML = message.NumOfPost;
     };
 
 }
 
 onlineUserWebSocket = function(){
     ws_3 = new WebSocket("ws://" + document.domain + ":5000/onlineUser");
-    currentToken = localStorage.getItem("token");
+    currentEmail = localStorage.getItem("email");
     // Connect and send the email and token to the websocket
     ws_3.onopen = function(){
-       ws_3.send(currentToken)
+       ws_3.send(currentEmail)
     }
 
     // Receive the message from the websocket
@@ -82,16 +88,19 @@ signInValidator = function(form){
     // Mandatory Check 
     if (mandatoryCheck(form.email.value) == false){
         document.getElementById("errormsgSignIn").innerHTML = "Please type your email.";
+		$("#errormsgSignIn").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
     if (emailFormatCheck(form.email.value) == false){
         document.getElementById("errormsgSignIn").innerHTML = "Please type valid email address.";
+		$("#errormsgSignIn").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
     if (mandatoryCheck(form.passwordSignIn.value) == false){
         document.getElementById("errormsgSignIn").innerHTML = "Please type your password.";
+		$("#errormsgSignIn").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
@@ -116,10 +125,10 @@ signInValidator = function(form){
                 displayView();
                 // Connect ws and trigger auto-signout checking
 				signInWebSocket(); 
-                postMsgWebSocket();
-                //onlineUserWebSocket();
+                postMsgWebSocket(form.email.value);
             } else {
                 document.getElementById('errormsgSignIn').innerHTML = responseMsg.message;
+				$("#errormsgSignIn").parent().effect("bounce", {times:3}, 300);
                 return false;
             }
         }
@@ -148,54 +157,63 @@ signUpValidator = function(form){
     if (mandatoryCheck(userFirstName) == false){
         clearMsg('loginmsg');
         document.getElementById("errormsgSignUp").innerHTML = "Please type your first name.";
+		$("#errormsgSignUp").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
     if (mandatoryCheck(userFamilyName) == false){
         clearMsg('loginmsg');
         document.getElementById("errormsgSignUp").innerHTML = "Please type your family name.";
+		$("#errormsgSignUp").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
     if (mandatoryCheck(userGender) == false){
         clearMsg('loginmsg');
         document.getElementById("errormsgSignUp").innerHTML = "Please select your gender.";
+		$("#errormsgSignUp").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
     if (mandatoryCheck(userCity) == false){
         clearMsg('loginmsg');
         document.getElementById("errormsgSignUp").innerHTML = "Please type your city.";
+		$("#errormsgSignUp").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
     if (mandatoryCheck(userCountry) == false){
         clearMsg('loginmsg');
         document.getElementById("errormsgSignUp").innerHTML = "Please type your country.";
+		$("#errormsgSignUp").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
     if (mandatoryCheck(userEmail) == false){
         clearMsg('loginmsg');
         document.getElementById("errormsgSignUp").innerHTML = "Please type your email.";
+		$("#errormsgSignUp").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
     if (emailFormatCheck(userEmail) == false){
         clearMsg('loginmsg');
         document.getElementById("errormsgSignUp").innerHTML = "Please type valid email address.";
+		$("#errormsgSignUp").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
     if (mandatoryCheck(pw1) == false){
         clearMsg('loginmsg');
         document.getElementById("errormsgSignUp").innerHTML = "Please type your password.";
+		$("#errormsgSignUp").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
     if (mandatoryCheck(pw2) == false){
         clearMsg('loginmsg');
         document.getElementById("errormsgSignUp").innerHTML = "Please confirm your password.";
+		$("#errormsgSignUp").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
@@ -229,6 +247,7 @@ signUpValidator = function(form){
             } else {
                 clearMsg('loginmsg');
                 document.getElementById('errormsgSignUp').innerHTML= responseMsg.message;
+				$("#errormsgSignUp").parent().effect("bounce", {times:3}, 300);
             }
         }
     }
@@ -260,11 +279,13 @@ pwValidator = function(password1, password2,errorMsgID){
     {
         // Display error message
         document.getElementById(errorMsgID).innerHTML = "The password should have at least 8 characters.";
+		$("#"+errorMsgID).parent().effect("bounce", {times:3}, 300);
         return false;
     }
     else{
         if (pwIsSame(password1,password2) == false){
             document.getElementById(errorMsgID).innerHTML = "The password must be the same.";
+			$("#"+errorMsgID).parent().effect("bounce", {times:3}, 300);
             return false;
         }
     }
@@ -299,16 +320,19 @@ changePassword = function(form){
 
     if (mandatoryCheck(oldPW) == false){
         document.getElementById("errormsgPW").innerHTML = "Please type your old password.";
+		$("#errormsgPW").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
     if (mandatoryCheck(newPW) == false){
         document.getElementById("errormsgPW").innerHTML = "Please type your new password.";
+		$("#errormsgPW").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
     if (mandatoryCheck(confirmPW) == false){
         document.getElementById("errormsgPW").innerHTML = "Please confirm your password.";
+		$("#errormsgPW").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
@@ -321,6 +345,7 @@ changePassword = function(form){
     // Not allow to change password with same password
     if (oldPW == newPW){
         document.getElementById("errormsgPW").innerHTML = "New password cannot be as same as old password.";
+		$("#errormsgPW").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
@@ -366,6 +391,7 @@ signOut = function(){
         if (con.readyState == 4){
             var responseMsg = JSON.parse(con.responseText);
             if (con.status==200){
+                onlineUserWebSocket();
                 localStorage.removeItem("token");
 				localStorage.removeItem("email");
                 displayView();
@@ -402,6 +428,10 @@ selectTab = function(event, tabName){
     // Set the class name for selected tab to "tab active"
     // Also use for marking which tab is selected
 	event.className = "tab active"
+
+	if ($("#quickNavBar:visible").is(":visible")){
+		$(".navbar-toggler").click();
+	}
 }
 
 // Extract and display the personal information of current user in home tab
@@ -444,6 +474,13 @@ postMsg = function(tab, form){
     }    
     
     var msg = form.postArea.value.trim();
+    if (msg == ""){
+        document.getElementById("errormsgPostWall_"+tab).innerHTML = "Your message is empty.";
+        return false;
+    }
+
+
+
 	var con = new XMLHttpRequest();
 
     con.open ("POST",'/postMsg', true);
@@ -453,7 +490,7 @@ postMsg = function(tab, form){
             if (con.status == 200){
                form.reset();
                retrieveMsg(tab); 
-               postMsgWebSocket();
+               postMsgWebSocket(email);
             } 
             document.getElementById("errormsgPostWall_"+tab).innerHTML = response.message;
         }
@@ -489,8 +526,8 @@ retrieveMsg = function(tab){
                     var allMsg = responseMsg.data;
                     document.getElementById("msgWall").innerHTML = "";
                     for (var i=allMsg.length-1; i>=0;i--){
-                        document.getElementById("msgWall").innerHTML += "<div class= \"row\">"+"From: " + allMsg[i].fromemail + "</div>" ;
-                        document.getElementById("msgWall").innerHTML += "<div class= \"msgBorder row\">" + allMsg[i].content + "</div>" + "<div class= \"row\"></div>"; 
+                        document.getElementById("msgWall").innerHTML += "<div class= \"row\"><div class=\"col-md-12\">"+"From: " + allMsg[i].fromemail + "</div></div>" ;
+                        document.getElementById("msgWall").innerHTML += "<div class= \"row\"><div class=\"col-md-12\"><div class=\"msgBorder\">" + allMsg[i].content + "</div></div>" + "<div class= \"row\"></div>"; 
                     }
                 } 
             }
@@ -510,8 +547,8 @@ retrieveMsg = function(tab){
                     var allMsg = responseMsg.data;
                     document.getElementById("msgWall_browse").innerHTML = "";
                     for (var i=allMsg.length-1; i>=0;i--){
-                        document.getElementById("msgWall_browse").innerHTML += "<div class= \"row\">"+"From: " + allMsg[i].fromemail + "</div>" ;
-                        document.getElementById("msgWall_browse").innerHTML += "<div class= \"msgBorder row\">" + allMsg[i].content + "</div>" + "<div class= \"row\"></div>";
+                        document.getElementById("msgWall_browse").innerHTML += "<div class= \"row\"><div class=\"col-md-12\">"+"From: " + allMsg[i].fromemail + "</div></div>" ;
+                        document.getElementById("msgWall_browse").innerHTML += "<div class= \"row\"><div class=\"col-md-12\"><div class=\"msgBorder\">" + allMsg[i].content + "</div></div>" + "<div class= \"row\"></div>"; 
                     }
                 } 
             }
@@ -539,13 +576,13 @@ searchUser = function(form){
                 //Overwrite the existing personal information
                 var data = responseMsg.data[0];
                 document.getElementById("personalInfo_browse").innerHTML = "";
-                document.getElementById("personalInfo_browse").innerHTML += "<h3>Personal Information</h3>";
-                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><label>Email: </label><div id=\"email_otherUser\" name=\"email_otherUser\">" + data['email'] + "</div></div>";
-                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><label>First Name: </label>" + data['firstname'] + "</div>";
-                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><label>Family Name: </label>" + data['familyname'] + "</div>";
-                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><label>Gender: </label>" + data['gender'] + "</div>";
-                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><label>City: </label>" + data['city'] + "</div>";
-                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><label>Country: </label>" + data['country'] + "</div>";
+                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-12\"><h3 class=\"title\">Personal Information</h3></div></div>";
+                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Email: </label></div><div class=\"col-md\"><div id=\"email_otherUser\" name=\"email_otherUser\">" + data['email'] + "</div></div></div>";
+                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>First Name: </label></div><div class=\"col-md\">" + data['firstname'] + "</div></div>";
+                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Family Name: </label></div><div class=\"col-md\">" + data['familyname'] + "</div></div>";
+                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Gender: </label></div><div class=\"col-md\">" + data['gender'] + "</div></div>";
+                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>City: </label></div><div class=\"col-md\">" + data['city'] + "</div></div>";
+                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Country: </label></div><div class=\"col-md\">" + data['country'] + "</div></div>";
 
                 //Display the message wall
                 document.getElementById("msgWallDisplay").innerHTML = document.getElementById("msgwallcontent").innerHTML;

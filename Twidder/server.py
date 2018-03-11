@@ -13,6 +13,7 @@ app.debug = True
 # One web socket for one user
 # Email is the key
 loggedUsers = {}
+postMsgUsers = {}
 
 
 @app.before_request
@@ -39,6 +40,7 @@ def webSocket():
 				message = json.loads(message)
 				email = str(message['email'])
 				token = str(message['token'])
+				
 				# Extract the ws if the user signed in before
 				if email in loggedUsers:
 					tmp_ws = loggedUsers[email]
@@ -52,23 +54,35 @@ def webSocket():
 
 				# Store the latest ws in the dict
 				loggedUsers[email] = ws
-				
+
 				num = database_helper.get_num_onlineuser()
 				for l in loggedUsers:
-					tmp_ws = loggedUsers[l]
-					tmp_ws.send(str(num))
-
-	return
+					ws_2 = loggedUsers[l]
+					if ws_2 != "":
+						ws_2.send(str(num))
+	return 
 
 @app.route('/numOfPost', methods=['GET'])
 def get_noOfPost():
 	if request.environ.get('wsgi.websocket'):
 		ws = request.environ['wsgi.websocket']
 		while True:
-			toEmail = ws.receive()
+			message = ws.receive()
+			message = json.loads(message)
+			currentEmail = str(message['writer'])
+			toEmail = str(message['toEmail'])
+
 			num = database_helper.get_num_post(toEmail)
-			#ws = loggedUsers[toEmail]
-			ws.send(json.dumps({"toEmail": toEmail, "NumOfPost": num}))
+
+			if (currentEmail == toEmail):
+				# Replace with a new ws 
+				postMsgUsers[currentEmail] = ws
+				ws.send(json.dumps({"toEmail": toEmail, "NumOfPost": num}))
+			else:
+				# Find the ws of toEmail and inform the toEmail to update the number
+				tmp_ws = postMsgUsers[toEmail]
+				tmp_ws.send(json.dumps({"toEmail": toEmail, "NumOfPost": num}))
+
 	return
 
 @app.route('/onlineUser', methods=['GET'])
@@ -79,8 +93,9 @@ def get_noOfOnlineUser():
 			message = ws.receive()
 			num = database_helper.get_num_onlineuser()
 			for l in loggedUsers:
-				tmp_ws = loggedUsers[l]
-				tmp_ws.send(str(num))
+				ws_2 = loggedUsers[l]
+				if (ws_2 != ""):
+					ws_2.send(str(num))
 	return
 
 @app.route('/signin', methods=['POST'])

@@ -2,169 +2,367 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Twidder</title>
     <link href="client.css" type="text/css" rel="stylesheet">
     <script src="client.js" type="text/javascript"></script>
+	<link href="assets/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <script type=”text/view” id="welcomeview">
-        <div id="WelcomeContent">
-            <div class="hasBorder" id="slogan">
-            <img src="wimage.png" alt="Twidder">
-            </div>
-            <div id="formContainer">
-                <div class="hasBorder" id='signin'>
-                    <!--Added IDs in two forms - signin and signup, onsubmit="return xxx()" to call js function -->
-                    <!--Added the attribute "required" in every input field for mandatory field checking.-->
-                    <form id= "signInForm" name='signIn' action="" method="post" onsubmit="return signInValidator(this)">
-                    <!--If the input type is "email", then it will automatically check the email format.-->
-                        <div class="row"><label>Email</label><input type='text' name='email' id="signin_email"></div>
-                        <div class="row"><label>Password</label><input type='password' name='passwordSignIn' id="signin_pw"></div>
-                        <!-- Added span to display error message and completed the styling-->
-                        <span class="row" id="errormsgSignIn"> </span>
-                        <div class="row"><button type="submit" id="btn_signin">Login</button></div>
-                    </form>
+       	<div id="WelcomeContent" class="center">
+            <div class="row">
+                <div class="col-md-6" id="slogan">
+                    <img id="wimage" class="shrink" src="wimage.png" alt="Twidder">
                 </div>
-                
-                <div class="hasBorder" id='signup'>
-                    <form id= "signUpForm" name='signUp' action="" method="post" onsubmit="return signUpValidator(this)">
-                        <p id="signuphere">Sign up here!</p>
-                        <div class="row"><label>First Name</label><input type='text' name='firstname'></div>
-                        <div class="row"><label>Family Name</label><input type='text' name='familyname'></div>
-                        <div class="row">
-                            <label>Gender</label>
-                            <select name='gender'>
-                                <option value='' selected disabled></option>
-                                <option value='Male'>Male</option>
-                                <option value='Female'>Female</option>
-                            </select>
+                <div class="col-md-6" id="formContainer">
+                    <div class="row shrink" id="signin">
+                        <div class="col-md-12">
+                            <form id= "signInForm" name='signIn' action="" method="post" onsubmit="return signInValidator(this)">
+                                <div class="row">
+                                    <div class="col-md-5"><label>Email</label></div>
+                                    <div class="col-md"><input type='text' name='email' id="signin_email"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5"><label>Password</label></div>
+                                    <div class="col-md"><input type='password' name='passwordSignIn' id="signin_pw"></div>
+                                </div>
+                                <!-- Added span to display error message and completed the styling-->
+                                <div class="row">
+                                    <div class="col-md-12"><span id="errormsgSignIn" class="error"> </span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+										<button type="submit" id="btn_signin" class="btn btn-success pull-right">Login</button>
+									</div>
+                                </div>
+                            </form>
                         </div>
-                        <div class="row"><label>City</label><input type='text' name='city'></div>
-                        <div class="row"><label>Country</label><input type='text' name='country'></div>
-                        <div class ="row"><label>Email</label><input type='text' name='email' id = "signup_email"></div>
-                        <div class = "row"><label>Password</label><input type='password' name='passwordSignUp'></div>
-                        <div class = "row"><label>Repeat PSW</label><input type='password' name='repeatPSW'></div>
-                        <div class="row"><span id="errormsgSignUp"> </span></div>
-                        <div class="row"><span id="loginmsg"> </span></div>
-                        <div class="row"><button type="submit" id = "btn_signup">Sign Up</button></div>      
-                    </form>
+                    </div>
+                    <div class="row shrink">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12" id="signuphere">
+                                    Sign up here!
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row" id="signup">
+                                <div class="col-md-12">
+                                    <form id= "signUpForm" name='signUp' action="" method="post" onsubmit="return signUpValidator(this)">
+                                        <div class="row">
+                                            <div class="col-md-5"><label>First Name</label></div>
+                                            <div class="col-md"><input type='text' name='firstname'></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>Family Name</label></div>
+                                            <div class="col-md"><input type='text' name='familyname'></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>Gender</label></div>
+                                            <div class="col-md"><select name='gender'>
+                                                <option value='' selected disabled></option>
+                                                <option value='Male'>Male</option>
+                                                <option value='Female'>Female</option>
+                                            </select></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>City</label></div>
+                                            <div class="col-md"><input type='text' name='city'></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>Country</label></div>
+                                            <div class="col-md"><input type='text' name='country'></div>
+                                        </div>
+                                        <div class ="row">
+                                            <div class="col-md-5"><label>Email</label></div>
+                                            <div class="col-md"><input type='text' name='email' id="signup_email"></div>
+                                        </div>
+                                        <div class ="row">
+                                            <div class="col-md-5"><label>Password</label></div>
+                                            <div class="col-md"><input type='password' name='passwordSignUp'></div>
+                                        </div>
+                                        <div class ="row">
+                                            <div class="col-md-5"><label>Repeat PSW</label></div>
+                                            <div class="col-md"><input type='password' name='repeatPSW'></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12"><span id="errormsgSignUp" class="error"> </span></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12"><span id="loginmsg" class="error"> </span></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+												<button type="submit" id="btn_signup" class="btn btn-success pull-right">Sign Up</button>
+											</div>
+                                        </div> 
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </script>
     <script type=”text/view” id="profileview">
-	    <div id = "ProfileContent">
-            <div id = "navigationBar">
-                <div class="row"><button class="tab active" onclick="selectTab(this,'home')" id="tab_home">Home</button></div>
-                <div class="row"><button class="tab" onclick="selectTab(this,'browse')" id="tab_browse">Browse</button></div>
-                <div class="row"><button class="tab" onclick="selectTab(this,'account')" id="tab_account">Account</button></div>
+		<div class="row">
+			<div class="col-md" id="quickNavBar">
+                <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse" data-target="#navigationBar">
+                    <span class="glyphicon glyphicon-menu-hamburger"></span>
+                </button>
             </div>
-            
-            <div id="home" class="tabcontent defaultPage" >
-                <div id="personalInfo_home">
-                    <h3>No. of Posts:</h3>
+        </div>
+	    <div id="ProfileContent">
+            <div class="row">
+                <div class="col-md-2 collapse" id="navigationBar">
                     <div class="row">
-                    <div id="numPost"></div>
+                        <div class="col-md-12">
+                			<button class="tab active" onclick="selectTab(this,'home')" id="tab_home">Home</button>
+                        </div>
                     </div>
-
-                    <h3>Total no. of online users:</h3>
                     <div class="row">
-                    <div id="numUsers"></div>
+                        <div class="col-md-12">
+                			<button class="tab" onclick="selectTab(this,'browse')" id="tab_browse">Browse</button>
+                        </div>
                     </div>
-
-                    <h3>Personal Information</h3>
                     <div class="row">
-					    <label>Email: </label><div class="personalInfo" name="home_personalInfo_email"></div>
-			        </div>
-                    <div class="row">
-					    <label>First Name: </label><div class="personalInfo" name="home_personalInfo_firstname"></div>
-					</div>
-                    <div class="row">
-					    <label>Family Name: </label><div class="personalInfo" name="home_personalInfo_familyname"></div>
-					</div>
-                    <div class="row">
-					    <label>Gender: </label><div class="personalInfo" name="home_personalInfo_gender"></div>
-					</div>
-                    <div class="row">
-					    <label>City: </label><div class="personalInfo" name="home_personalInfo_city"></div>
-					</div>
-                    <div class="row">
-					    <label>Country: </label><div class="personalInfo" name="home_personalInfo_country"></div>
-					</div>
+                        <div class="col-md-12">
+                			<button class="tab" onclick="selectTab(this,'account')" id="tab_account">Account</button>
+                        </div>
+                    </div>
                 </div>
-
             
+                <div class="col-md tabcontent defaultPage" id="home">
+                    <div id="personalInfo_home">
+                        <div class = "row">
+                            <div class="col-md-12">
+                                <h3>No. of Posts:</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md">
+                                <div id="numPost"></div>
+                            </div>
+                        </div>
+
+                        <div class = "row">
+                            <div class="col-md-12">
+                                <h3>Total no. of online users:</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md">
+                                <div id="numUsers"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="title">Personal Information</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>Email: </label>
+                            </div>
+                            <div class="col-md">
+                                <div class="personalInfo" name="home_personalInfo_email"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>First Name: </label>
+                            </div>
+                            <div class="col-md">
+                                <div class="personalInfo" name="home_personalInfo_firstname"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>Family Name: </label>
+                            </div>
+                            <div class="col-md">
+                                <div class="personalInfo" name="home_personalInfo_familyname"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>Gender: </label>
+                            </div>
+                            <div class="col-md">
+                                <div class="personalInfo" name="home_personalInfo_gender"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>City: </label>
+                            </div>
+                            <div class="col-md">
+                                <div class="personalInfo" name="home_personalInfo_city"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>Country: </label>
+                            </div>
+                            <div class="col-md">
+                                <div class="personalInfo" name="home_personalInfo_country"></div>
+                            </div>
+                        </div>
+                    </div>
+
                 
-           
-            <div id="msgWallContent">
-                <div class="row">
-                    <h3 class="title">Message Wall</h3>
-                    <button id="refresh" onclick="retrieveMsg('home')">Refresh</button>
-                </div>
-    			<div id="msgWall"></div>
-    		</div>
-
-                <form id="postMsgForm_home" action="" method="post" onsubmit="return postMsg('home', this)">
-                    <div class=row"><textarea rows="13" name="postArea" class="postBox" onfocus="return clearMsg('errormsgPostWall_home')"></textarea></div>
-                    <div class=row">
-                        <button type="submit" id = "btn_post_home">Post</button>
-                        <span id="errormsgPostWall_home"></span>
+                    <div id="msgWallContent">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="title">Message Wall</h3>
+                                <button type="button" id="refresh" class="btn btn-default" onclick="retrieveMsg('home')">Refresh</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="msgWall"></div>
+                            </div>
+                        </div>
                     </div>
+              
 
-                </form>
-    		</div>
+                    <form id="postMsgForm_home" action="" method="post" onsubmit="return postMsg('home', this)">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <textarea rows="6" name="postArea" class="postBox" onfocus="return clearMsg('errormsgPostWall_home')"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-default">Post</button>
+                                <span id="errormsgPostWall_home" class="error"></span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
 		    
-            <div id="browse" class="tabcontent">
-                <form id="searchBar" method="post" action="" onsubmit="return searchUser(this)">
+                <div class="col-md tabcontent" id="browse">
+                    <form id="searchBar" method="post" action="" onsubmit="return searchUser(this)">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" name="searchEmail" placeholder="Search your friend by email address">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" id="searchBtn" class="btn btn-default">Search</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <span id="errorMsgSearch" class="error"></span>
+                            </div>
+                        </div>
+                    </form>
                     <div class="row">
-                        <input type="text" name="searchEmail" placeholder="Search your friend by email address">
-                        <button id="searchBtn" type="submit">Search</button>
-                        <span id="errorMsgSearch"></span>
+                        <div class="col-md-12">
+                            <div id="personalInfo_browse"></div>
+                        </div>
                     </div>
-                </form>
-                <div id="personalInfo_browse"></div>
-                <div id="msgWallDisplay"></div>
-                
-		    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="msgWallDisplay"></div>
+                        </div>
+                    </div>
+                </div>
 
-            <div id="account" class="tabcontent">
-                <form id="changePW" name="changePW" action="" method="post" onsubmit="return changePassword(this)">
-                    <h3>Change Password</h3>
-                    <div class="row"><label>Old Password: </label><input type="password" name="oldPW"></div>
-                    <div class="row"><label>New Password: </label><input type="password" name="newPW"></div>
-                    <div class="row"><label>Confirm Password: </label><input type="password" name="confirmPW"></div>
-                    <div class="row"><button type="submit" id="changePWBtn">Submit</button></div>
-                    <div class="row"><span id="errormsgPW"></span></div>
-                </form>
-                <div id="signOut">
-                <h3>Sign Out</h3>
-                <button type="submit" onclick="return signOut()" id="btn_signout">Sign Out</button>
+                <div class="col-md tabcontent" id="account">
+                    <form id="changePW" name="changePW" action="" method="post" onsubmit="return changePassword(this)">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="title">Change Password</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>Old Password: </label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="password" name="oldPW">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>New Password: </label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="password" name="newPW">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>Confirm Password: </label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="password" name="confirmPW">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span id="errormsgPW" class="error"></span>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="submit" id="changePWBtn" class="btn btn-warning">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="title">Sign Out</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-danger" onclick="return signOut()">Sign Out</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-		</div>
+        </div>
     </script>
-    <script type=”text/view” id="msgwallcontent">
+        <script type=”text/view” id="msgwallcontent">
         <div id="msgWallContent_friend">
             <div class="row">
-                <h3 class="title">Message Wall</h3>
-                <button id="refresh_browse" onclick="retrieveMsg('browse')">Refresh</button>
+                <div class="col-md-12">
+                    <h3 class="title">Message Wall</h3>
+                    <button id="refresh_browse" class="btn btn-default" onclick="retrieveMsg('browse')">Refresh</button>
+                </div>
             </div>
             <div id="msgWall_browse"></div>
         </div>
                 
         <form id="postMsgForm_browse" action="" method="post" onsubmit="return postMsg('browse', this)">
-            <div class="row"><textarea rows="13" name="postArea" class="postBox" onfocus="return clearMsg('errormsgPostWall_browse')" id="postBox_browse"></textarea>
+            <div class="row">
+                <div class="col-md-12">
+                    <textarea rows="6" name="postArea" class="postBox" onfocus="return clearMsg('errormsgPostWall_browse')"></textarea>
+                </div>
             </div>
             <div class="row">
-                <button type="submit" id="btn_post_browse">Post</button>
-                <span id="errormsgPostWall_browse"></span>
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-default">Post</button>
+                    <span id="errormsgPostWall_browse"></span>
+                </div>
             </div>
         </form>
     </script>
 </head>
 <body>
-
-<div id="startpage"></div>
-
-
-
+    <div id="container"></div>
+    <script src="assets/js/jquery-3.3.1.min.js" type="application/javascript"></script>
+    <script src="assets/js/jquery-ui.min.js" type="application/javascript"></script>
+    <script src="assets/js/popper.min.js" type="text/javascript"></script>
+    <script src="assets/js/bootstrap.min.js" type="application/javascript"></script>
 </body>
 </html>
