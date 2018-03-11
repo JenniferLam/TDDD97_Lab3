@@ -37,9 +37,44 @@ signInWebSocket = function(){
             localStorage.removeItem("email");
             displayView();
         }
-        
+        document.getElementById("numUsers").innerHTML = message.data;
                 
     };
+}
+
+postMsgWebSocket = function(){
+    currentEmail = localStorage.getItem("email");
+    ws_2 = new WebSocket("ws://" + document.domain + ":5000/numOfPost");
+    
+    // Connect and send the email and token to the websocket
+    ws_2.onopen = function(){
+        ws_2.send(currentEmail);
+    }
+
+    // Receive the message from the websocket
+    ws_2.onmessage = function (message) {
+        message = JSON.parse(message.data);
+        if (message.toEmail == currentEmail){
+            // Update the number of posts
+            document.getElementById("numPost").innerHTML = message.NumOfPost;
+        }
+    };
+
+}
+
+onlineUserWebSocket = function(){
+    ws_3 = new WebSocket("ws://" + document.domain + ":5000/onlineUser");
+    currentToken = localStorage.getItem("token");
+    // Connect and send the email and token to the websocket
+    ws_3.onopen = function(){
+       ws_3.send(currentToken)
+    }
+
+    // Receive the message from the websocket
+    ws_3.onmessage = function (message) {
+        document.getElementById("numUsers").innerHTML = message.data;
+    };
+
 }
 
 signInValidator = function(form){
@@ -81,6 +116,8 @@ signInValidator = function(form){
                 displayView();
                 // Connect ws and trigger auto-signout checking
 				signInWebSocket(); 
+                postMsgWebSocket();
+                //onlineUserWebSocket();
             } else {
                 document.getElementById('errormsgSignIn').innerHTML = responseMsg.message;
                 return false;
@@ -416,6 +453,7 @@ postMsg = function(tab, form){
             if (con.status == 200){
                form.reset();
                retrieveMsg(tab); 
+               postMsgWebSocket();
             } 
             document.getElementById("errormsgPostWall_"+tab).innerHTML = response.message;
         }

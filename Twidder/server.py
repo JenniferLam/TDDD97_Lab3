@@ -26,6 +26,7 @@ def teardown_request(exception):
 @app.route('/')
 def root():
 	return app.send_static_file('client.html')
+	#return app.send_static_file('index.html')
 
 @app.route('/websoc',methods=['GET'])
 def webSocket():
@@ -48,9 +49,38 @@ def webSocket():
 				# then remove the token and redirect to welcome page in first sign in browser
 				if tmp_ws != "":
 					tmp_ws.send("SignOut")
-				
+
 				# Store the latest ws in the dict
 				loggedUsers[email] = ws
+				
+				num = database_helper.get_num_onlineuser()
+				for l in loggedUsers:
+					tmp_ws = loggedUsers[l]
+					tmp_ws.send(str(num))
+
+	return
+
+@app.route('/numOfPost', methods=['GET'])
+def get_noOfPost():
+	if request.environ.get('wsgi.websocket'):
+		ws = request.environ['wsgi.websocket']
+		while True:
+			toEmail = ws.receive()
+			num = database_helper.get_num_post(toEmail)
+			#ws = loggedUsers[toEmail]
+			ws.send(json.dumps({"toEmail": toEmail, "NumOfPost": num}))
+	return
+
+@app.route('/onlineUser', methods=['GET'])
+def get_noOfOnlineUser():
+	if request.environ.get('wsgi.websocket'):
+		ws = request.environ['wsgi.websocket']
+		while True:
+			message = ws.receive()
+			num = database_helper.get_num_onlineuser()
+			for l in loggedUsers:
+				tmp_ws = loggedUsers[l]
+				tmp_ws.send(str(num))
 	return
 
 @app.route('/signin', methods=['POST'])

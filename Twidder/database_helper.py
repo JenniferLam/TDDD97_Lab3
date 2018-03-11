@@ -98,14 +98,17 @@ def change_PW(email, newPassword):
   g.db.commit()
 
 
-# Convert the output from unicode to ascii
-# Only use if the result includes some special characters
-# def convert_str(str):
-#   if not str:
-#     return ""
-#   tmp = str[0]
-#   output = repr(tmp[0].encode('ascii'))
-#   output = output.replace("'","")
-#   return output
+def get_num_post(email):
+  cur = g.db.execute("select count(*) from message where toemail = ?", [email])
+  result = cur.fetchone()
+  cur.close()
+  return result[0]
+
+def get_num_onlineuser():
+  cur = g.db.execute("select count(*) from login")
+  result = cur.fetchone()
+  cur.close()
+  return result[0]
+
 
 
