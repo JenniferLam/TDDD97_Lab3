@@ -86,7 +86,8 @@ def webSocket():
 				elif msgtype == "postmsg":
 					num = database_helper.get_num_post(email)
 					if email in loggedUsers and loggedUsers[email] != "":
-						loggedUsers[email].send(json.dumps({"type":"postMsg", "value":str(num)}))
+						totalPosts = database_helper.get_totalnum_post()
+						loggedUsers[email].send(json.dumps({"type":"postmsg", "value":str(num), "total":str(totalPosts)}))
 				
 				# Update the total number of views per user
 				elif msgtype == "updateuserview":
@@ -116,7 +117,8 @@ def webSocket():
 					for l in loggedUsers:
 						tmp_ws = loggedUsers[l]
 						if  tmp_ws != "":
-							tmp_ws.send(json.dumps({"type":"updateUserCnt", "value":str(num_onlineuser)}))
+							totalUsers = database_helper.get_num_user()
+							tmp_ws.send(json.dumps({"type":"updateUserCnt", "value":str(num_onlineuser), "total":str(totalUsers)}))
 							tmp_ws.send(json.dumps({"type":"updateUserView", "value":str(view_table[l])}))
             else:
                 print("[Debug] Exit loop")
@@ -211,7 +213,8 @@ def get_user_data_by_token(token = None):
 	# Return the user profile
 	data = database_helper.find_user(email)
 	numOfPost = database_helper.get_num_post(email)
-	return json.dumps({"success": True, "message": "User data retrieved.", "data": [dict(x) for x in data], "NumOfPost":str(numOfPost)}),200
+	totalOfPost = database_helper.get_totalnum_post()
+	return json.dumps({"success": True, "message": "User data retrieved.", "data": [dict(x) for x in data], "NumOfPost":str(numOfPost), "TotalOfPost":str(totalOfPost)}),200
 
 @app.route('/getUserDataByEmail/<token>/', defaults={'email':""}, methods=['GET'])	
 @app.route('/getUserDataByEmail/<token>/<email>', methods=['GET'])

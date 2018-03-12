@@ -1,6 +1,6 @@
-// Create a global websocket for all websocket operations
 var ws;
 var graph_numPost;
+var graph_numUsers;
 window.onbeforeunload = function(){
     currentEmail = localStorage.getItem("email");
     currentToken = localStorage.getItem("token");
@@ -37,11 +37,13 @@ createWebSoc = function(onopenJson) {
             ws.close();
         } 
         if (message.type == "updateUserCnt"){
-            document.getElementById("numUsers").innerHTML = message.value;
+			updateGraph(graph_numUsers, message.value, message.total);
+            //document.getElementById("numUsers").innerHTML = message.value;
         }
         if (message.type == "postMsg"){
-			updateGraph(graph_numPost, message.value);
+			updateGraph(graph_numPost, message.value, message.total);
             //document.getElementById("numPost").innerHTML = message.value;
+
         }
         if (message.type == "updateUserView"){
             document.getElementById("numUsersView").innerHTML = message.value;
@@ -499,7 +501,7 @@ loadPersonalProfile = function(){
             var response = JSON.parse(con.responseText);
             if (con.status == 200){
                 var data = response.data;
-				updateGraph(graph_numPost, response.NumOfPost);
+				updateGraph(graph_numPost, response.NumOfPost, response.TotalOfPost);
                 //document.getElementById("numPost").innerHTML = response.NumOfPost;
                 document.getElementsByName("home_personalInfo_email")[0].innerHTML = data[0]['email'];
                 document.getElementsByName("home_personalInfo_firstname")[0].innerHTML = data[0]['firstname'];

@@ -200,7 +200,7 @@ function loadLiquidFillGauge(elementId, value, config) {
     }
 
     function GaugeUpdater(){
-        this.update = function(value){
+        this.update = function(value,max_value){
             var newFinalValue = parseFloat(value).toFixed(2);
             var textRounderUpdater = function(value){ return Math.round(value); };
             if(parseFloat(newFinalValue) != parseFloat(textRounderUpdater(newFinalValue))){
@@ -222,7 +222,7 @@ function loadLiquidFillGauge(elementId, value, config) {
                 .duration(config.waveRiseTime)
                 .tween("text", textTween);
 
-            var fillPercent = Math.max(config.minValue, Math.min(config.maxValue, value))/config.maxValue;
+            var fillPercent = Math.max(config.minValue, Math.min(max_value, value))/max_value;
             var waveHeight = fillCircleRadius*waveHeightScale(fillPercent*100);
             var waveRiseScale = d3.scale.linear()
                 // The clipping area size is the height of the fill circle + the wave height, so we position the clip wave

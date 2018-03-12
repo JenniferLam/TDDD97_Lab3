@@ -104,6 +104,12 @@ def get_num_post(email):
   cur.close()
   return result[0]
 
+def get_totalnum_post():
+  cur = g.db.execute("select count(*) from message")
+  result = cur.fetchone()
+  cur.close()
+  return result[0]
+
 def get_num_onlineuser():
   cur = g.db.execute("select count(*) from login")
   result = cur.fetchone()
