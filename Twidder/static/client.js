@@ -1,4 +1,5 @@
 var ws;
+var graph_numPost;
 window.onbeforeunload = function(){
     currentEmail = localStorage.getItem("email");
     currentToken = localStorage.getItem("token");
@@ -37,7 +38,8 @@ createWebSoc = function(onopenJson) {
             document.getElementById("numUsers").innerHTML = message.value;
         }
         if (message.type == "postmsg"){
-            document.getElementById("numPost").innerHTML = message.value;
+			updateGraph(graph_numPost, message.value);
+            //document.getElementById("numPost").innerHTML = message.value;
 
         }
                 
@@ -88,6 +90,7 @@ displayView = function(){
         document.getElementById("container").innerHTML = document.getElementById("welcomeview").innerHTML;
     }else{        
         document.getElementById("container").innerHTML = document.getElementById("profileview").innerHTML;
+		setupGraph();
         loadPersonalProfile();
         retrieveMsg('home');
     }
@@ -477,7 +480,8 @@ loadPersonalProfile = function(){
             var response = JSON.parse(con.responseText);
             if (con.status == 200){
                 var data = response.data;
-                document.getElementById("numPost").innerHTML = response.NumOfPost;
+				updateGraph(graph_numPost, response.NumOfPost);
+                //document.getElementById("numPost").innerHTML = response.NumOfPost;
                 document.getElementsByName("home_personalInfo_email")[0].innerHTML = data[0]['email'];
                 document.getElementsByName("home_personalInfo_firstname")[0].innerHTML = data[0]['firstname'];
                 document.getElementsByName("home_personalInfo_familyname")[0].innerHTML = data[0]['familyname'];
