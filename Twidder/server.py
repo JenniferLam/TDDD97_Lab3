@@ -29,7 +29,6 @@ def teardown_request(exception):
 @app.route('/')
 def root():
 	return app.send_static_file('client.html')
-	#return app.send_static_file('index.html')
 
 @app.route('/websoc',methods=['GET'])
 def webSocket():
@@ -37,7 +36,7 @@ def webSocket():
     if request.environ.get('wsgi.websocket'):
         ws = request.environ['wsgi.websocket']
         while True:
-            # Receive the email and token from client side in json format
+            # Receive the message type, email and token from client side in json format
             message = ws.receive()
             if message is not None:
 				print("[DEBUG] " + message)
@@ -91,6 +90,8 @@ def webSocket():
 				# Update the total number of views per user
 				elif msgtype == "updateuserview":
 					value = str(message['value'])
+					
+					# Implement when the user searches someone
 					if value == "search":
 						previousEmail = str(message['previousEmail'])
 						if email in view_table:
@@ -101,10 +102,13 @@ def webSocket():
 						print (previousEmail)
 						if previousEmail != "null":
 							view_table[previousEmail] = view_table[previousEmail] - 1
-							
+					
+					# If the user searches someone before sign out, 
+					# exclude the profile display in the browse tab		
 					elif value == "signout":
 						view_table[email] -= 1
 
+					# Send latest no. of views
 					totalUsers = database_helper.get_num_user()
 					if email in loggedUsers and loggedUsers[email] != "":
 						loggedUsers[email].send(json.dumps({"type":"updateUserView", "value":str(view_table[email]), "total":str(totalUsers)}))
@@ -128,7 +132,6 @@ def webSocket():
 
 @app.route('/signin', methods=['POST'])
 def sign_in():
-	
 	try:
 		email = request.json['email']
 		password = request.json['password']

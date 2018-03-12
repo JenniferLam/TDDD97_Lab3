@@ -1,7 +1,22 @@
+/*
+TDDD97 Project Assignment
+Created by Jennifer Lam and Vlad Buga 
+Last Updated on 13 Mar 2018
+*/
+
+// Store the websocket
 var ws;
+
+// D3 visualization
 var graph_numPost;
 var graph_numUsers;
-var graph_attraction;
+var graph_view;
+
+// Template rendering for displaying message wall
+var source_msgwall;
+var template_msgwall;
+
+// Implement before close the browser
 window.onbeforeunload = function(){
     currentEmail = localStorage.getItem("email");
     currentToken = localStorage.getItem("token");
@@ -11,44 +26,67 @@ window.onbeforeunload = function(){
         "email": currentEmail,
         "token": currentToken
     }
-
+    // Inform server to update the total no. of online users
     ws.send(JSON.stringify(closeBrowse));
     ws.close();
 }
 
 window.onload =function(){
     loadWebSoc();
+
+    // Display the latest message on th wall
+    Handlebars.registerHelper('reverse', function (arr) {
+        arr.reverse();
+    });
+    // Compile the templates 
+	source_msgwall   = document.getElementById("msgDisplay_template").innerHTML;
+	template_msgwall = Handlebars.compile(source_msgwall);
 }
 
-// Connect and receive the messages from websocket
-createWebSoc = function(onopenJson) {
-    // Connect and send the email and token to the websocket
+/* For live data presentation, 
+    1. No. of posts per user: display total number of posts of current user
+    2. No. of online users: display the number of online users
+    If the user just closes the browser instead of sign out properly,
+    the user will not be considered as online users
+    3. No. of views per profile: 
+    display the number of users to search the current user's profile
+
+    createWebSoc() supports the live data presentation
+    by sending and receiving messages through websocket
+*/
+createWebSoc = function(json) {
+
+    // Connect and send the email and token to server
+    // json is from sign in websocket
     ws.onopen = function(){
-        ws.send(JSON.stringify((onopenJson)));
+        ws.send(JSON.stringify((json)));
     }
     
     // Receive the message from the websocket
     ws.onmessage = function (message) {
         message = JSON.parse(message.data);
 
+        // Inform the client side to sign out
 		if (message.type == "autoSignOut" && message.value == "SignOut"){
             localStorage.removeItem("token");
             localStorage.removeItem("email");
             displayView();
             ws.close();
         } 
+
+        // Update total count of online users
         if (message.type == "updateUserCnt"){
 			updateGraph(graph_numUsers, message.value, message.total);
-            //document.getElementById("numUsers").innerHTML = message.value;
         }
+
+        // Update no. of posts
         if (message.type == "postMsg"){
 			updateGraph(graph_numPost, message.value, message.total);
-            //document.getElementById("numPost").innerHTML = message.value;
-
         }
+
+        // Update no. of views
         if (message.type == "updateUserView"){
-			updateGraph(graph_attraction, message.value, message.total);
-            //document.getElementById("numUsersView").innerHTML = message.value;
+			updateGraph(graph_view, message.value, message.total);
         }
                 
     };
@@ -56,8 +94,12 @@ createWebSoc = function(onopenJson) {
     ws.onclose = function() {};
 }
 
-// After close and reopen browser, check if the token in local storage is valid or not
-// If invalid, remove the token and email in local storage and then redirect to welcome view
+/*  
+    After close and reopen browser, 
+    check if the token in local storage is valid or not.
+    If invalid, remove the token and email in local storage 
+    and then redirect to welcome view.
+*/
 loadWebSoc = function(){
     token = localStorage.getItem("token");
     email = localStorage.getItem("email");
@@ -70,6 +112,7 @@ loadWebSoc = function(){
             if (con.readyState == 4){
                 var response = JSON.parse(con.responseText);
                 if (con.status == 200){
+                        // This will implement when refresh the browser
                         ws = new WebSocket("ws://" + document.domain + ":5000/websoc");
                         var reload = {
                             "type":"reload",
@@ -78,34 +121,36 @@ loadWebSoc = function(){
                         }
                         createWebSoc(reload);
                     } else {
+                        // This will implement when user closes the browser
+                        // and signs in again in another browser
                         localStorage.removeItem('token');
                         localStorage.removeItem('email');
-                    
                 }
             }
         };
         con.send(null);
     }
-
     displayView();
 
 }
 
+// Determine which view (welcome or profile) should be displayed
 displayView = function(){
-    // the code required to display a view
-    // If the token exists in local storage, then display the profile view directly
+    
     token = localStorage.getItem("token");
-
+    // When the token does not exist, display welcome view, otherwise, profile view
     if ( token == null) {
         document.getElementById("container").innerHTML = document.getElementById("welcomeview").innerHTML;
     }else{        
         document.getElementById("container").innerHTML = document.getElementById("profileview").innerHTML;
-		setupGraph();
+		// Load the D3 graph
+        setupGraph();
         loadPersonalProfile();
         retrieveMsg('home');
     }
 }
 
+// Create the websocket once the user signs in 
 signInWebSocket = function(){
     currentEmail = localStorage.getItem("email");
     currentToken = localStorage.getItem("token");
@@ -120,16 +165,94 @@ signInWebSocket = function(){
     
 }
 
+/*
+    User allows to drag the message and drop it to the textarea
+    Usually for replying others' messages
+*/
+function allowDrop(ev) {
+    ev.preventDefault();
+}
 
+function drag(ev) {
+    ev.dataTransfer.setData("fromemail", ev.toElement.getElementsByClassName("fromemail_msg")[0].innerText);
+    ev.dataTransfer.setData("content", ev.toElement.getElementsByClassName("content_msg")[0].innerText);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var fromemail = ev.dataTransfer.getData("fromemail");
+    fromemail = fromemail.replace(":","");
+    var content = ev.dataTransfer.getData("content");
+    ev.target.value += ">>>" + fromemail + ": " + content + "\n";
+}
+
+// Check if the input is empty or not
+mandatoryCheck = function(value){
+    if (value == "" || value == " ")
+        return false;
+    return true;
+}
+
+// Check if the email is in correct format
+// Format should be XXXX@XXXX
+emailFormatCheck = function(value){
+    if (value.indexOf("@") > 0 && value.indexOf("@") < value.length-1)
+        return true;
+    return false;
+}
+
+// Handle password validation
+pwValidator = function(password1, password2,errorMsgID){
+
+    if (pwLengthCheck(password1) == false)
+    {
+        // Display error message
+        document.getElementById(errorMsgID).innerHTML = "The password should have at least 8 characters.";
+        // Error message effect
+        $("#"+errorMsgID).parent().effect("bounce", {times:3}, 300);
+        return false;
+    }
+    else{
+        if (pwIsSame(password1,password2) == false){
+            document.getElementById(errorMsgID).innerHTML = "The password must be the same.";
+            // Error message effect
+            $("#"+errorMsgID).parent().effect("bounce", {times:3}, 300);
+            return false;
+        }
+    }
+    return true;
+}
+
+// Check if the password satisfies the minimum length of characters
+pwLengthCheck = function(password){
+    var minLength = 8;
+    if (password.length < minLength) {
+        return false;
+    }
+    return true;
+}
+
+// Check if the passwords in "Password" and "Repeat PSW" are the same
+pwIsSame = function(password1, password2){
+    if (password1 == password2) {
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+// Handle signin validation and request
 signInValidator = function(form){
  
-    // Mandatory Check 
+    // Mandatory Field Check 
     if (mandatoryCheck(form.email.value) == false){
         document.getElementById("errormsgSignIn").innerHTML = "Please type your email.";
 		$("#errormsgSignIn").parent().effect("bounce", {times:3}, 300);
         return false;
     }
 
+    // Check the email format
     if (emailFormatCheck(form.email.value) == false){
         document.getElementById("errormsgSignIn").innerHTML = "Please type valid email address.";
 		$("#errormsgSignIn").parent().effect("bounce", {times:3}, 300);
@@ -142,8 +265,6 @@ signInValidator = function(form){
         return false;
     }
 
-    // If the signup failed, return false until the user enters correct information
-    
     var signInForm = {
         "email": form.email.value.trim(),
         "password": form.passwordSignIn.value.trim()
@@ -164,7 +285,8 @@ signInValidator = function(form){
                 displayView();
             } else {
                 document.getElementById('errormsgSignIn').innerHTML = responseMsg.message;
-				$("#errormsgSignIn").parent().effect("bounce", {times:3}, 300);
+				// Error message effect
+                $("#errormsgSignIn").parent().effect("bounce", {times:3}, 300);
                 return false;
             }
         }
@@ -176,6 +298,7 @@ signInValidator = function(form){
 
 }
 
+// Handle signup validation and request
 signUpValidator = function(form){
 
     // Get the form data
@@ -232,6 +355,7 @@ signUpValidator = function(form){
         return false;
     }
 
+    // Check the email format
     if (emailFormatCheck(userEmail) == false){
         clearMsg('loginmsg');
         document.getElementById("errormsgSignUp").innerHTML = "Please type valid email address.";
@@ -267,7 +391,6 @@ signUpValidator = function(form){
         "gender": userGender.trim(),
         "city": userCity.trim(),
         "country": userCountry.trim()
-
     }
 
     var con = new XMLHttpRequest();
@@ -283,7 +406,8 @@ signUpValidator = function(form){
             } else {
                 clearMsg('loginmsg');
                 document.getElementById('errormsgSignUp').innerHTML= responseMsg.message;
-				$("#errormsgSignUp").parent().effect("bounce", {times:3}, 300);
+				// Error message effect
+                $("#errormsgSignUp").parent().effect("bounce", {times:3}, 300);
             }
         }
     }
@@ -293,61 +417,7 @@ signUpValidator = function(form){
     return false;
 }
 
-// Check if the input is empty or not
-mandatoryCheck = function(value){
-    if (value == "" || value == " ")
-        return false;
-    return true;
-}
-
-// Check if the email is in correct format
-// Format should be XXXX@XXXX
-emailFormatCheck = function(value){
-    if (value.indexOf("@") > 0 && value.indexOf("@") < value.length-1)
-        return true;
-    return false;
-}
-
-
-pwValidator = function(password1, password2,errorMsgID){
-
-    if (pwLengthCheck(password1) == false)
-    {
-        // Display error message
-        document.getElementById(errorMsgID).innerHTML = "The password should have at least 8 characters.";
-		$("#"+errorMsgID).parent().effect("bounce", {times:3}, 300);
-        return false;
-    }
-    else{
-        if (pwIsSame(password1,password2) == false){
-            document.getElementById(errorMsgID).innerHTML = "The password must be the same.";
-			$("#"+errorMsgID).parent().effect("bounce", {times:3}, 300);
-            return false;
-        }
-    }
-    return true;
-}
-
-// Check if the password satisfies the minimum length of characters
-pwLengthCheck = function(password){
-    var minLength = 8;
-    if (password.length < minLength) {
-        return false;
-    }
-    return true;
-}
-
-// Check if the passwords in "Password" and "Repeat PSW" are the same
-pwIsSame = function(password1, password2){
-    if (password1 == password2) {
-        return true;
-    }
-    else{
-        return false;
-    }
-}
-
-//Change Password function in Account Tab
+// Change Password function in Account Tab
 changePassword = function(form){
 
     var oldPW = form.oldPW.value;
@@ -372,7 +442,7 @@ changePassword = function(form){
         return false;
     }
 
-    // Validate the password before send to server
+    // Validate the password before sending to server
     // Minimum length and same string in new password and confirm password fields
     if (pwValidator(newPW,confirmPW,'errormsgPW') == false){
         return false;
@@ -385,8 +455,7 @@ changePassword = function(form){
         return false;
     }
 
-
-    // if pass all validations, send to server and request for password change
+    // If pass all validations, send to server and request for password change
     var currentToken = localStorage.getItem("token");
 
     var pwForm = {
@@ -402,6 +471,7 @@ changePassword = function(form){
         if (con.readyState == 4){
             var responseMsg = JSON.parse(con.responseText);
             if (con.status==200){
+                // Clear the user input
                 form.reset();
             }
             document.getElementById("errormsgPW").innerHTML = responseMsg.message;
@@ -410,7 +480,6 @@ changePassword = function(form){
 
     con.setRequestHeader("Content-Type", "application/json");
     con.send(JSON.stringify(pwForm));
-
 
     return false;
 
@@ -427,7 +496,6 @@ signOut = function(){
         if (con.readyState == 4){
             var responseMsg = JSON.parse(con.responseText);
             if (con.status==200){
-                //onlineUserWebSocket();
                 var signOut = {
                     "type": "signout",
                     "email": currentEmail,
@@ -435,6 +503,8 @@ signOut = function(){
                 }
                 ws.send(JSON.stringify(signOut));
 
+                // Update the no. of views if the user searched someone before sign out
+                // Get the email address displayed in browse tab and exclude it in the count
                 var email_browser = document.getElementsByName("email_otherUser")[0];
                 if (email_browser) { email_browser = document.getElementsByName("email_otherUser")[0].innerHTML;}
                 else {email_browser == "";}
@@ -447,10 +517,10 @@ signOut = function(){
                     }
                     ws.send(JSON.stringify(updateview));
                 }
+
                 localStorage.removeItem("token");
                 localStorage.removeItem("email");
                 displayView();
-
                 ws.close();
             }
         }
@@ -463,7 +533,7 @@ signOut = function(){
 
 
 // Display the selected tab by changing the class name
-// call this function once click the tab button
+// Call this function once click the tab button
 selectTab = function(event, tabName){
     var tabcontent, tabbutton;
 
@@ -486,6 +556,7 @@ selectTab = function(event, tabName){
     // Also use for marking which tab is selected
 	event.className = "tab active"
 
+    // To hide the navigation bar menu after click on a tab
 	if ($("#quickNavBar:visible").is(":visible")){
 		$(".navbar-toggler").click();
 	}
@@ -503,8 +574,8 @@ loadPersonalProfile = function(){
             var response = JSON.parse(con.responseText);
             if (con.status == 200){
                 var data = response.data;
+                // Update live data
 				updateGraph(graph_numPost, response.NumOfPost, response.TotalOfPost);
-                //document.getElementById("numPost").innerHTML = response.NumOfPost;
                 document.getElementsByName("home_personalInfo_email")[0].innerHTML = data[0]['email'];
                 document.getElementsByName("home_personalInfo_firstname")[0].innerHTML = data[0]['firstname'];
                 document.getElementsByName("home_personalInfo_familyname")[0].innerHTML = data[0]['familyname'];
@@ -518,14 +589,16 @@ loadPersonalProfile = function(){
     con.send(null);
 }
 
-// Post message in home and browse tab
-// The parameter "tab" is used to determine the location to store the message 
-// Current user: use the token to store in the current user profile
-// Other user: according to the email displayed in the personal information, store the message in that user profile
+/* 
+    Handle post message implementation
+    The parameter "tab" is to determine which implementation should be used
+    The email address is extracted from UI
+*/
 postMsg = function(tab, form){
 	var currentToken = localStorage.getItem("token");
     var email;
 
+    // Get the email address from UI
     if (tab == "home"){
         email = document.getElementsByName("home_personalInfo_email")[0].innerHTML;
     } else {
@@ -533,6 +606,7 @@ postMsg = function(tab, form){
     }    
     
     var msg = form.postArea.value.trim();
+    // Not allow to post empty message
     if (msg == ""){
         document.getElementById("errormsgPostWall_"+tab).innerHTML = "Your message is empty.";
         return false;
@@ -547,6 +621,7 @@ postMsg = function(tab, form){
             if (con.status == 200){
                form.reset();
                retrieveMsg(tab); 
+               // Update the number of posts
                var postMsg = {
                     "type": "postMsg",
                     "email": email,
@@ -570,20 +645,6 @@ postMsg = function(tab, form){
 	return false;
 }
 
-function allowDrop(ev) {
-    ev.preventDefault();
-}
-
-function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.innerText);
-}
-
-function drop(ev) {
-    ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    ev.target.value += ">>>" + data;
-}
-
 // Retrieve the message from user profile and display on the message wall
 // Call this function when clicking the refresh button and after new message is posted
 retrieveMsg = function(tab){
@@ -598,13 +659,9 @@ retrieveMsg = function(tab){
             if (con.readyState == 4){
                 var responseMsg = JSON.parse(con.responseText);
                 if (con.status==200){
-
+                    // Apply template to display the message
                     var allMsg = responseMsg.data;
-                    document.getElementById("msgWall").innerHTML = "";
-                    for (var i=allMsg.length-1; i>=0;i--){
-                        document.getElementById("msgWall").innerHTML += "<div class= \"row\"><div class=\"col-md-12\">"+"From: " + allMsg[i].fromemail + "</div></div>" ;
-                        document.getElementById("msgWall").innerHTML += "<div class= \"row\" draggable=\"true\" ondragstart=\"drag(event)\"><div class=\"col-md-12\"><div class=\"msgBorder\">" + allMsg[i].content + "</div></div>" + "<div class= \"row\"></div>"; 
-                    }
+					document.getElementById("msgWall").innerHTML = template_msgwall(allMsg);
                 } 
             }
         };
@@ -613,19 +670,16 @@ retrieveMsg = function(tab){
         
         document.getElementById("msgWall_browse").innerHTML = "";
         var email = document.getElementsByName("email_otherUser")[0].innerHTML;
+
         con.open("GET",'/getUserMessagesByEmail/'+currentToken+"/"+email,true);
 
         con.onreadystatechange = function(){
             if (con.readyState == 4){
                 var responseMsg = JSON.parse(con.responseText);
                 if (con.status==200){
-
+                    // Apply template to display the message
                     var allMsg = responseMsg.data;
-                    document.getElementById("msgWall_browse").innerHTML = "";
-                    for (var i=allMsg.length-1; i>=0;i--){
-                        document.getElementById("msgWall_browse").innerHTML += "<div class= \"row\"><div class=\"col-md-12\">"+"From: " + allMsg[i].fromemail + "</div></div>" ;
-                        document.getElementById("msgWall_browse").innerHTML += "<div class= \"row\"><div class=\"col-md-12\"><div class=\"msgBorder\">" + allMsg[i].content + "</div></div>" + "<div class= \"row\"></div>"; 
-                    }
+                    document.getElementById("msgWall_browse").innerHTML = template_msgwall(allMsg);
                 } 
             }
         };
@@ -640,6 +694,10 @@ searchUser = function(form){
     var email = form.searchEmail.value;
     var currentToken = localStorage.getItem("token");
 
+    // Update the number of views
+    /*
+        Reduce the number of views when the user searches another user profile
+    */
     var previousEmail = document.getElementsByName("email_otherUser")[0];
     if (previousEmail){
         previousEmail = previousEmail.innerHTML;
@@ -674,6 +732,7 @@ searchUser = function(form){
 
                 // Clear the search field
                 form.reset();
+
                 // Clear the feedback for the post area if necessary
                 clearMsg('errormsgPostWall_browse');
 
