@@ -148,7 +148,7 @@
                                 		<h3>Posts</h3>
 									</div>
 									<div class="col-md-12">
-										<svg id="graph_numPost" width="100%"></svg>
+										<svg id="graph_numPost" class="igraph"></svg>
 									</div>
 								</div>
                             </div>
@@ -158,7 +158,7 @@
                                 		<h3>Online users</h3>
 									</div>
 									<div class="col-md-12">
-										<svg id="graph_numUsers" width="100%"></svg>
+										<svg id="graph_numUsers" class="igraph"></svg>
 									</div>
 								</div>
                             </div>
@@ -168,7 +168,7 @@
                                 		<h3>Attraction</h3>
 									</div>
 									<div class="col-md-12">
-										<svg id="graph_numView" width="100%"></svg>
+										<svg id="graph_attraction" class="igraph"></svg>
 									</div>
 								</div>
                             </div>
@@ -248,7 +248,7 @@
                     <form id="postMsgForm_home" action="" method="post" onsubmit="return postMsg('home', this)">
                         <div class="row">
                             <div class="col-md-12">
-                                <textarea rows="6" name="postArea" class="postBox" onfocus="return clearMsg('errormsgPostWall_home')"></textarea>
+                                <textarea id="home_textarea" ondrop="drop(event)" ondragover="allowDrop(event)" rows="6" name="postArea" class="postBox" ></textarea>
                             </div>
                         </div>
                         

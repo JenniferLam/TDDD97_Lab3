@@ -70,7 +70,6 @@ def webSocket():
 				elif msgtype == "reload":
 					num_onlineuser += 1
 					loggedUsers[email] = ws
-					view_table[email] = 0
 
 				# Close the browser
 				elif msgtype == "unload":
@@ -83,11 +82,11 @@ def webSocket():
 					num_onlineuser -= 1
 
 				# Update the total number of posts
-				elif msgtype == "postmsg":
+				elif msgtype == "postMsg":
 					num = database_helper.get_num_post(email)
 					if email in loggedUsers and loggedUsers[email] != "":
 						totalPosts = database_helper.get_totalnum_post()
-						loggedUsers[email].send(json.dumps({"type":"postmsg", "value":str(num), "total":str(totalPosts)}))
+						loggedUsers[email].send(json.dumps({"type":"postMsg", "value":str(num), "total":str(totalPosts)}))
 				
 				# Update the total number of views per user
 				elif msgtype == "updateuserview":
@@ -106,11 +105,12 @@ def webSocket():
 					elif value == "signout":
 						view_table[email] -= 1
 
+					totalUsers = database_helper.get_num_user()
 					if email in loggedUsers and loggedUsers[email] != "":
-						loggedUsers[email].send(json.dumps({"type":"updateUserView", "value":str(view_table[email])}))
+						loggedUsers[email].send(json.dumps({"type":"updateUserView", "value":str(view_table[email]), "total":str(totalUsers)}))
 
 					if previousEmail in loggedUsers and loggedUsers[previousEmail] != "":
-						loggedUsers[previousEmail].send(json.dumps({"type":"updateUserView", "value":str(view_table[previousEmail])}))
+						loggedUsers[previousEmail].send(json.dumps({"type":"updateUserView", "value":str(view_table[previousEmail]), "total":str(totalUsers)}))
 
 				# Update the total number of online users	
 				if msgtype != "postmsg":
@@ -119,7 +119,7 @@ def webSocket():
 						if  tmp_ws != "":
 							totalUsers = database_helper.get_num_user()
 							tmp_ws.send(json.dumps({"type":"updateUserCnt", "value":str(num_onlineuser), "total":str(totalUsers)}))
-							tmp_ws.send(json.dumps({"type":"updateUserView", "value":str(view_table[l])}))
+							tmp_ws.send(json.dumps({"type":"updateUserView", "value":str(view_table[l]), "total":str(totalUsers)}))
             else:
                 print("[Debug] Exit loop")
                 loggedUsers[email] = ""
