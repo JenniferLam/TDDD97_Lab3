@@ -110,5 +110,11 @@ def get_num_onlineuser():
   cur.close()
   return result[0]
 
+def get_num_user():
+  cur = g.db.execute("select count(*) from userprofile")
+  result = cur.fetchone()
+  cur.close()
+  return result[0]
+
 
 
