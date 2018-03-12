@@ -37,6 +37,10 @@ h3.title{
     margin: 12px 2px;
     padding: 8px 4px;
 }
+.igraph{
+	width: 150px;
+	height: 150px;
+}
 #wimage{
     width: 400px;
 }

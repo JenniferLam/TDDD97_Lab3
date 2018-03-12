@@ -1,6 +1,7 @@
 var ws;
 var graph_numPost;
 var graph_numUsers;
+var graph_attraction;
 window.onbeforeunload = function(){
     currentEmail = localStorage.getItem("email");
     currentToken = localStorage.getItem("token");
@@ -46,7 +47,8 @@ createWebSoc = function(onopenJson) {
 
         }
         if (message.type == "updateUserView"){
-            document.getElementById("numUsersView").innerHTML = message.value;
+			updateGraph(graph_attraction, message.value, message.total);
+            //document.getElementById("numUsersView").innerHTML = message.value;
         }
                 
     };
@@ -546,7 +548,7 @@ postMsg = function(tab, form){
                form.reset();
                retrieveMsg(tab); 
                var postMsg = {
-                    "type": "postmsg",
+                    "type": "postMsg",
                     "email": email,
                     "token": currentToken
                }
@@ -568,6 +570,20 @@ postMsg = function(tab, form){
 	return false;
 }
 
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.innerText);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.value += ">>>" + data;
+}
+
 // Retrieve the message from user profile and display on the message wall
 // Call this function when clicking the refresh button and after new message is posted
 retrieveMsg = function(tab){
@@ -587,7 +603,7 @@ retrieveMsg = function(tab){
                     document.getElementById("msgWall").innerHTML = "";
                     for (var i=allMsg.length-1; i>=0;i--){
                         document.getElementById("msgWall").innerHTML += "<div class= \"row\"><div class=\"col-md-12\">"+"From: " + allMsg[i].fromemail + "</div></div>" ;
-                        document.getElementById("msgWall").innerHTML += "<div class= \"row\"><div class=\"col-md-12\"><div class=\"msgBorder\">" + allMsg[i].content + "</div></div>" + "<div class= \"row\"></div>"; 
+                        document.getElementById("msgWall").innerHTML += "<div class= \"row\" draggable=\"true\" ondragstart=\"drag(event)\"><div class=\"col-md-12\"><div class=\"msgBorder\">" + allMsg[i].content + "</div></div>" + "<div class= \"row\"></div>"; 
                     }
                 } 
             }
