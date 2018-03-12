@@ -10,11 +10,40 @@ window.onbeforeunload = function(){
     }
 
     ws.send(JSON.stringify(closeBrowse));
-    //ws.close();
+    ws.close();
 }
 
 window.onload =function(){
     loadWebSoc();
+}
+
+createWebSoc = function(onopenJson) {
+    // Connect and send the email and token to the websocket
+    ws.onopen = function(){
+        ws.send(JSON.stringify((onopenJson)));
+    }
+    
+    // Receive the message from the websocket
+    ws.onmessage = function (message) {
+        message = JSON.parse(message.data);
+
+		if (message.type == "autoSignOut" && message.value == "SignOut"){
+            localStorage.removeItem("token");
+            localStorage.removeItem("email");
+            displayView();
+            ws.close();
+        } 
+        if (message.type == "updateUserCnt"){
+            document.getElementById("numUsers").innerHTML = message.value;
+        }
+        if (message.type == "postmsg"){
+            document.getElementById("numPost").innerHTML = message.value;
+
+        }
+                
+    };
+    
+    ws.onclose = function() {};
 }
 
 loadWebSoc = function(){
@@ -35,9 +64,7 @@ loadWebSoc = function(){
                             "email": email,
                             "token": token
                         }
-                        ws.onopen = function (){
-                            ws.send(JSON.stringify(reload));
-                        }
+                        createWebSoc(reload);
                     } else {
                         localStorage.removeItem('token');
                         localStorage.removeItem('email');
@@ -76,30 +103,8 @@ signInWebSocket = function(){
         "email" : currentEmail,
         "token" : currentToken
     }
-    // Connect and send the email and token to the websocket
-    ws.onopen = function(){
-        ws.send(JSON.stringify((signInUser)));
-    }
-
-    // Receive the message from the websocket
-    ws.onmessage = function (message) {
-        message = JSON.parse(message.data);
-
-		if (message.type == "autoSignOut" && message.value == "SignOut"){
-            localStorage.removeItem("token");
-            localStorage.removeItem("email");
-            displayView();
-            //ws.close();
-        } 
-        if (message.type == "updateUserCnt"){
-            document.getElementById("numUsers").innerHTML = message.value;
-        }
-        if (message.type == "postmsg"){
-            document.getElementById("numPost").innerHTML = message.value;
-
-        }
-                
-    };
+    createWebSoc(signInUser);
+    
 }
 
 
@@ -420,7 +425,7 @@ signOut = function(){
 				localStorage.removeItem("email");
                 displayView();
 
-                //ws.close();
+                ws.close();
             }
         }
     }

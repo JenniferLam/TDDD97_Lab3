@@ -30,13 +30,14 @@ def root():
 
 @app.route('/websoc',methods=['GET'])
 def webSocket():
-	global num_onlineuser
-	if request.environ.get('wsgi.websocket'):
-		ws = request.environ['wsgi.websocket']
-		while True:
-			# Receive the email and token from client side in json format
-			message = ws.receive()
-			if message:
+    global num_onlineuser
+    if request.environ.get('wsgi.websocket'):
+        ws = request.environ['wsgi.websocket']
+        while True:
+            # Receive the email and token from client side in json format
+            message = ws.receive()
+            if message is not None:
+				print("[DEBUG] " + message)
 				message = json.loads(message)
 				msgtype = str(message['type'])
 				email = str(message['email'])
@@ -87,8 +88,11 @@ def webSocket():
 						tmp_ws = loggedUsers[l]
 						if  tmp_ws != "":
 							tmp_ws.send(json.dumps({"type":"updateUserCnt", "value":str(num_onlineuser)}))
-
-	return 
+            else:
+                print("[Debug] Exit loop")
+                loggedUsers[email] = ""
+                break
+	return ""
 
 # @app.route('/numOfPost', methods=['GET'])
 # def get_noOfPost():
