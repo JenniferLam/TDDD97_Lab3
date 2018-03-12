@@ -13,7 +13,10 @@ app.debug = True
 # One web socket for one user
 # Email is the key
 loggedUsers = {}
+# Store the total number of online users
 num_onlineuser = 0
+# Store the total no. of views per user
+view_table = {}
 
 @app.before_request
 def before_request():
@@ -60,11 +63,14 @@ def webSocket():
 
 					# Store the latest ws in the dict
 					loggedUsers[email] = ws
+					if not email in view_table:
+						view_table[email] = 0
 				
 				# Refresh the page
 				elif msgtype == "reload":
 					num_onlineuser += 1
 					loggedUsers[email] = ws
+					view_table[email] = 0
 
 				# Close the browser
 				elif msgtype == "unload":
@@ -80,52 +86,43 @@ def webSocket():
 				elif msgtype == "postmsg":
 					num = database_helper.get_num_post(email)
 					if email in loggedUsers and loggedUsers[email] != "":
-						loggedUsers[email].send(json.dumps({"type":"postmsg", "value":str(num)}))
+						loggedUsers[email].send(json.dumps({"type":"postMsg", "value":str(num)}))
 				
+				# Update the total number of views per user
+				elif msgtype == "updateuserview":
+					value = str(message['value'])
+					if value == "search":
+						previousEmail = str(message['previousEmail'])
+						if email in view_table:
+							view_table[email] += 1
+						else:
+							view_table[email] = 1
+
+						print (previousEmail)
+						if previousEmail != "null":
+							view_table[previousEmail] = view_table[previousEmail] - 1
+							
+					elif value == "signout":
+						view_table[email] -= 1
+
+					if email in loggedUsers and loggedUsers[email] != "":
+						loggedUsers[email].send(json.dumps({"type":"updateUserView", "value":str(view_table[email])}))
+
+					if previousEmail in loggedUsers and loggedUsers[previousEmail] != "":
+						loggedUsers[previousEmail].send(json.dumps({"type":"updateUserView", "value":str(view_table[previousEmail])}))
+
 				# Update the total number of online users	
 				if msgtype != "postmsg":
 					for l in loggedUsers:
 						tmp_ws = loggedUsers[l]
 						if  tmp_ws != "":
 							tmp_ws.send(json.dumps({"type":"updateUserCnt", "value":str(num_onlineuser)}))
+							tmp_ws.send(json.dumps({"type":"updateUserView", "value":str(view_table[l])}))
             else:
                 print("[Debug] Exit loop")
                 loggedUsers[email] = ""
                 break
 	return ""
-
-# @app.route('/numOfPost', methods=['GET'])
-# def get_noOfPost():
-# 	if request.environ.get('wsgi.websocket'):
-# 		ws = request.environ['wsgi.websocket']
-# 		while True:
-# 			message = ws.receive()
-# 			message = json.loads(message)
-# 			currentEmail = str(message['writer'])
-# 			toEmail = str(message['toEmail'])
-
-# 			num = database_helper.get_num_post(toEmail)
-
-# 			if (currentEmail == toEmail):
-# 				# Replace with a new ws 
-# 				postMsgUsers[currentEmail] = ws
-# 				ws.send(json.dumps({"toEmail": toEmail, "NumOfPost": num}))
-# 			else:
-# 				# Find the ws of toEmail and inform the toEmail to update the number
-# 				tmp_ws = postMsgUsers[toEmail]
-# 				tmp_ws.send(json.dumps({"toEmail": toEmail, "NumOfPost": num}))
-
-# 	return
-
-# @app.route('/getWebSocByToken/<token>',methods=['GET'])
-# def get_ws_by_token(token = None):
-# 	global num_onlineuser
-# 	email = database_helper.get_emailByToken(token)
-# 	if email in loggedUsers and loggedUsers[email] != "":
-# 		num_onlineuser+=1
-# 		return loggedUsers[email]
-# 	return ""
-
 
 @app.route('/signin', methods=['POST'])
 def sign_in():

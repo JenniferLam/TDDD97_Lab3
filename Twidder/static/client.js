@@ -1,3 +1,4 @@
+// Create a global websocket for all websocket operations
 var ws;
 var graph_numPost;
 window.onbeforeunload = function(){
@@ -18,6 +19,7 @@ window.onload =function(){
     loadWebSoc();
 }
 
+// Connect and receive the messages from websocket
 createWebSoc = function(onopenJson) {
     // Connect and send the email and token to the websocket
     ws.onopen = function(){
@@ -37,10 +39,12 @@ createWebSoc = function(onopenJson) {
         if (message.type == "updateUserCnt"){
             document.getElementById("numUsers").innerHTML = message.value;
         }
-        if (message.type == "postmsg"){
+        if (message.type == "postMsg"){
 			updateGraph(graph_numPost, message.value);
             //document.getElementById("numPost").innerHTML = message.value;
-
+        }
+        if (message.type == "updateUserView"){
+            document.getElementById("numUsersView").innerHTML = message.value;
         }
                 
     };
@@ -48,6 +52,8 @@ createWebSoc = function(onopenJson) {
     ws.onclose = function() {};
 }
 
+// After close and reopen browser, check if the token in local storage is valid or not
+// If invalid, remove the token and email in local storage and then redirect to welcome view
 loadWebSoc = function(){
     token = localStorage.getItem("token");
     email = localStorage.getItem("email");
@@ -424,8 +430,21 @@ signOut = function(){
                     "token": currentToken
                 }
                 ws.send(JSON.stringify(signOut));
+
+                var email_browser = document.getElementsByName("email_otherUser")[0];
+                if (email_browser) { email_browser = document.getElementsByName("email_otherUser")[0].innerHTML;}
+                else {email_browser == "";}
+                if (email_browser != ""){
+                    var updateview = {
+                        "type": "updateuserview",
+                        "value": "signout",
+                        "email": email_browser,
+                        "token": currentToken
+                    }
+                    ws.send(JSON.stringify(updateview));
+                }
                 localStorage.removeItem("token");
-				localStorage.removeItem("email");
+                localStorage.removeItem("email");
                 displayView();
 
                 ws.close();
@@ -515,8 +534,6 @@ postMsg = function(tab, form){
         return false;
     }
 
-
-
 	var con = new XMLHttpRequest();
 
     con.open ("POST",'/postMsg', true);
@@ -605,6 +622,12 @@ searchUser = function(form){
     var email = form.searchEmail.value;
     var currentToken = localStorage.getItem("token");
 
+    var previousEmail = document.getElementsByName("email_otherUser")[0];
+    if (previousEmail){
+        previousEmail = previousEmail.innerHTML;
+    } else {
+        previousEmail = "null";
+    }
 
     con.open("GET",'/getUserDataByEmail/'+currentToken+"/"+email,true);
 
@@ -635,6 +658,16 @@ searchUser = function(form){
                 form.reset();
                 // Clear the feedback for the post area if necessary
                 clearMsg('errormsgPostWall_browse');
+
+                // Send message to update no. of views
+                var searchUser = {
+                    "type": "updateuserview",
+                    "value": "search",
+                    "email": email,
+                    "previousEmail": previousEmail,
+                    "token": currentToken
+                }
+                ws.send(JSON.stringify(searchUser));
 
             } else {
                 document.getElementById("errorMsgSearch").innerHTML = responseMsg.message;
