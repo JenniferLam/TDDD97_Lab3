@@ -15,6 +15,8 @@ var graph_view;
 // Template rendering for displaying message wall
 var source_msgwall;
 var template_msgwall;
+var source_signin;
+var template_signin;
 
 // Implement before close the browser
 window.onbeforeunload = function(){
@@ -32,15 +34,8 @@ window.onbeforeunload = function(){
 }
 
 window.onload =function(){
+    compileTemplate();
     loadWebSoc();
-
-    // Display the latest message on th wall
-    Handlebars.registerHelper('reverse', function (arr) {
-        arr.reverse();
-    });
-    // Compile the templates 
-	source_msgwall   = document.getElementById("msgDisplay_template").innerHTML;
-	template_msgwall = Handlebars.compile(source_msgwall);
 }
 
 /* For live data presentation, 
@@ -140,7 +135,8 @@ displayView = function(){
     token = localStorage.getItem("token");
     // When the token does not exist, display welcome view, otherwise, profile view
     if ( token == null) {
-        document.getElementById("container").innerHTML = document.getElementById("welcomeview").innerHTML;
+        document.getElementById("container").innerHTML = template_signin(template_data);
+        //document.getElementById("container").innerHTML = document.getElementById("welcomeview").innerHTML;
     }else{        
         document.getElementById("container").innerHTML = document.getElementById("profileview").innerHTML;
 		// Load the D3 graph

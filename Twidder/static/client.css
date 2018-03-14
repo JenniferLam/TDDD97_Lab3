@@ -55,13 +55,6 @@ h3.title{
     text-align: center;
     font-size:20px;
 }
-@media (min-width: 768px){
-    #wimage{
-		width:130%;
-        max-width: 400px;
-		float: right;
-    }   
-}
 
 /*Profile View*/
 #ProfileContent{
@@ -97,25 +90,7 @@ h3.title{
     margin: 0px -15px;
     border-radius: 10px;
 }
-@media (min-width: 768px){
-    #navigationBar{
-        float:none;
-        display: block;
-    }
-    #quickNavBar{
-        display: none;
-    }
-	#ProfileContent{
-		padding-left: 0px;
-	}
-	#ProfileContent button.tab{
-		border-bottom-right-radius: 0px;
-		border-top-right-radius: 0px;
-	}
-	#ProfileContent .tabcontent{
-		border-top-left-radius: 0px;
-	}
-}
+
 /*Profile*/
 #ProfileContent button.tab.active {
 	background-color: #57a8f4;
@@ -150,3 +125,29 @@ form#searchBar{
     display: none;
 }
 
+@media (min-width: 768px){
+    /*Welcome*/
+    #wimage{
+		width:130%;
+        max-width: 400px;
+		float: right;
+    } 
+    /*Profile*/
+    #navigationBar{
+        float:none;
+        display: block;
+    }
+    #quickNavBar{
+        display: none;
+    }
+	#ProfileContent{
+		padding-left: 0px;
+	}
+	#ProfileContent button.tab{
+		border-bottom-right-radius: 0px;
+		border-top-right-radius: 0px;
+	}
+	#ProfileContent .tabcontent{
+		border-top-left-radius: 0px;
+	}
+}
