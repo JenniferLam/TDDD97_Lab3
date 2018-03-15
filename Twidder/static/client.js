@@ -15,8 +15,10 @@ var graph_view;
 // Template rendering for displaying message wall
 var source_msgwall;
 var template_msgwall;
-var source_signin;
-var template_signin;
+var source_welcome;
+var template_welcome;
+var source_profile;
+var template_profile;
 
 // Implement before close the browser
 window.onbeforeunload = function(){
@@ -36,6 +38,25 @@ window.onbeforeunload = function(){
 window.onload =function(){
     compileTemplate();
     loadWebSoc();
+}
+
+compileTemplate = function() {
+    // Display the latest message on th wall
+    Handlebars.registerHelper('reverse', function (arr) {
+        arr.reverse();
+    });
+    
+    Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+        return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+    });
+    
+    // Compile the templates 
+    source_msgwall   = document.getElementById("msgDisplay_template").innerHTML;
+    template_msgwall = Handlebars.compile(source_msgwall);
+    source_welcome = document.getElementById("welcomeview").innerHTML;
+    template_welcome = Handlebars.compile(source_welcome);
+    source_profile = document.getElementById("profileview").innerHTML;
+    template_profile = Handlebars.compile(source_profile);
 }
 
 /* For live data presentation, 
@@ -135,10 +156,12 @@ displayView = function(){
     token = localStorage.getItem("token");
     // When the token does not exist, display welcome view, otherwise, profile view
     if ( token == null) {
-        document.getElementById("container").innerHTML = template_signin(template_data);
+        document.getElementById("container").innerHTML = template_welcome(template_data);
         //document.getElementById("container").innerHTML = document.getElementById("welcomeview").innerHTML;
     }else{        
-        document.getElementById("container").innerHTML = document.getElementById("profileview").innerHTML;
+        //document.getElementById("container").innerHTML = document.getElementById("profileview").innerHTML;
+        document.getElementById("container").innerHTML = template_profile(template_data);
+        ;
 		// Load the D3 graph
         setupGraph();
         loadPersonalProfile();
@@ -572,6 +595,12 @@ loadPersonalProfile = function(){
                 var data = response.data;
                 // Update live data
 				updateGraph(graph_numPost, response.NumOfPost, response.TotalOfPost);
+                for (int i =0; i<personalInfo_home_name.length;i++;){
+                    document.getElementsByName(personalInfo_home_name[i])[0].innerHTML = template_profile()
+
+                }
+
+
                 document.getElementsByName("home_personalInfo_email")[0].innerHTML = data[0]['email'];
                 document.getElementsByName("home_personalInfo_firstname")[0].innerHTML = data[0]['firstname'];
                 document.getElementsByName("home_personalInfo_familyname")[0].innerHTML = data[0]['familyname'];

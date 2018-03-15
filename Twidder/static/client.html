@@ -99,7 +99,7 @@
             </div>
         </div>
     </script>
-    <script type=”text/view” id="profileview">
+    <script type=”text/x-handlebars-template” id="profileview">
 		<div class="row">
 			<div class="col-md" id="quickNavBar">
                 <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse" data-target="#navigationBar">
@@ -110,113 +110,48 @@
 	    <div id="ProfileContent">
             <div class="row">
                 <div class="col-md-2 collapse" id="navigationBar">
-                    <div class="row">
-                        <div class="col-md-12">
-                			<button class="tab active" onclick="selectTab(this,'home')" id="tab_home">Home</button>
+                    {{#navBar}}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="{{class}}" onclick="selectTab(this,'{{onclick}}')" id="{{id}}">{{value}}</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                			<button class="tab" onclick="selectTab(this,'browse')" id="tab_browse">Browse</button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                			<button class="tab" onclick="selectTab(this,'account')" id="tab_account">Account</button>
-                        </div>
-                    </div>
+                    {{/navBar}}
                 </div>
             
                 <div class="col-md tabcontent defaultPage" id="home">
                     <div id="personalInfo_home">
-
-
-						<div class ="row">
-                            <div class="col-md-4">
-								<div class="row">
-									<div class="col-md-12">
-                                		<h3>No. of Posts</h3>
-									</div>
-									<div class="col-md-12">
-										<svg id="graph_numPost" class="igraph"></svg>
-									</div>
-								</div>
-                            </div>
-                            <div class="col-md-4">
-								<div class="row">
-									<div class="col-md-12">
-                                		<h3>No. of Users Online</h3>
-									</div>
-									<div class="col-md-12">
-										<svg id="graph_numUsers" class="igraph"></svg>
-									</div>
-								</div>
-                            </div>
-							<div class="col-md-4">
-								<div class="row">
-									<div class="col-md-12">
-                                		<h3>No. of Views</h3>
-									</div>
-									<div class="col-md-12">
-										<svg id="graph_view" class="igraph"></svg>
-									</div>
-								</div>
-                            </div>
-						</div>
+                        <div class = "row">
+                        {{#graph}}
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h3>{{value}}</h3>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <svg id="{{id}}" class="igraph"></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                        {{/graph}}
+                        </div>
 
                         <div class="row">
                             <div class="col-md-12">
                                 <h3 class="title">Personal Information</h3>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label>Email: </label>
+                        {{#this personalInfo_home}}
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>{{label}}: </label>
+                                </div>
+                                <div class="col-md">
+                                    <div class="personalInfo" name="{{name}}">{{this}}</div>
+                                </div>
                             </div>
-                            <div class="col-md">
-                                <div class="personalInfo" name="home_personalInfo_email"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label>First Name: </label>
-                            </div>
-                            <div class="col-md">
-                                <div class="personalInfo" name="home_personalInfo_firstname"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label>Family Name: </label>
-                            </div>
-                            <div class="col-md">
-                                <div class="personalInfo" name="home_personalInfo_familyname"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label>Gender: </label>
-                            </div>
-                            <div class="col-md">
-                                <div class="personalInfo" name="home_personalInfo_gender"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label>City: </label>
-                            </div>
-                            <div class="col-md">
-                                <div class="personalInfo" name="home_personalInfo_city"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label>Country: </label>
-                            </div>
-                            <div class="col-md">
-                                <div class="personalInfo" name="home_personalInfo_country"></div>
-                            </div>
-                        </div>
+                        {{/this personalInfo_home}}
                     </div>
 
                 
@@ -286,30 +221,18 @@
                                 <h3 class="title">Change Password</h3>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label>Old Password: </label>
+
+                        {{#changePW}}
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>{{label}}: </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="password" name="{{name}}">
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <input type="password" name="oldPW">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label>New Password: </label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="password" name="newPW">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label>Confirm Password: </label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="password" name="confirmPW">
-                            </div>
-                        </div>
+                        {{/changePW}}
+
                         <div class="row">
                             <div class="col-md-12">
                                 <span id="errormsgPW" class="error"></span>
@@ -336,7 +259,26 @@
             </div>
         </div>
     </script>
-        <script type=”text/view” id="msgwallcontent">
+        <script type=”text/x-handlebars-template” id="msgwallcontent">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="title">Personal Information</h3>
+                </div>
+            </div>
+
+            {{#personalInfo_browse}}
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Email: </label>
+                    </div>
+                    <div class="col-md">
+                        <div id="email_otherUser" name="email_otherUser"></div>
+                    </div>
+                </div>
+            {{/personalInfo_browse}}
+
+
+
         <div id="msgWallContent_friend">
             <div class="row">
                 <div class="col-md-12">
@@ -361,6 +303,7 @@
             </div>
         </form>
     </script>
+
 </head>
 <body>
     <div id="container"></div>
