@@ -104,9 +104,9 @@ f.write(str(step_num)+'. '+'Click the Search Button\n')
 step_num+= 1
 
 # Display the user's profile
-element_present = EC.presence_of_element_located((By.NAME,'email_otherUser'))
+element_present = EC.presence_of_element_located((By.ID,'email_otherUser'))
 WebDriverWait(driver, 90).until(element_present)
-email_browse = driver.find_element_by_name("email_otherUser")
+email_browse = driver.find_element_by_id("email_otherUser")
 
 driver.save_screenshot('./result/postmsg_case_3_4.png')
 
