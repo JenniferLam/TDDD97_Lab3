@@ -106,53 +106,70 @@ var template_data = {
 		 }
 	],
 	personalInfo_home : [
-		 {
-		   "label": "Email",
-		   "name": "home_personalInfo_email"
-		 },
-		 {
-		   "label": "First Name",
-		   "name": "home_personalInfo_firstname"
-		 },
-		 {
-		   "label": "Family Name",
-		   "name": "home_personalInfo_familyname"
-		 },
-		 {
-		   "label": "Gender",
-		   "name": "home_personalInfo_gender"
-		 },
-		 {
-		   "label": "City",
-		   "name": "home_personalInfo_city"
-		 },
-		 {
-		   "label": "Country",
-		   "name": "home_personalInfo_country"
-		 }
-	],
+         {
+           "tab": "home",
+           "name": "email",
+           "label": "Email"
+         },
+         {
+           "tab": "home",
+           "name": "firstname",
+           "label": "First Name"
+         },
+         {
+           "tab": "home",
+           "name": "familyname",
+           "label": "Family Name"
+         },
+         {
+           "tab": "home",
+           "name": "gender",
+           "label": "Gender"
+         },
+         {
+           "tab": "home",
+           "name": "city",
+           "label": "City"
+         },
+         {
+           "tab": "home",
+           "name": "country",
+           "label": "Country"
+         }
+    ],
 	personalInfo_browse: [
-		 {
-		   "label": "Email",
-		   "name": "email_otherUser",
-		   "id": "email_otherUser"
-		 },
-		 {
-		   "label": "First Name"
-		 },
-		 {
-		   "label": "Family Name"
-		 },
-		 {
-		   "label": "Gender"
-		 },
-		 {
-		   "label": "City"
-		 },
-		 {
-		   "label": "Country"
-		 }
-	],
+         {
+           "tab": "browse",
+           "name": "email",
+           "id": "email_otherUser",
+           "label": "Email"
+         },
+         {
+           "tab": "browse",
+           "name": "firstname",
+           "label": "First Name"
+         },
+         {
+           "tab": "browse",
+           "name": "familyname",
+           "label": "Family Name"
+         },
+         {
+           "tab": "browse",
+           "name": "gender",
+           "label": "Gender"
+         },
+         {
+           "tab": "browse",
+           "name": "city",
+           "label": "City"
+         },
+         {
+           "tab": "browse",
+           "name": "country",
+           "label": "Country"
+         }
+    ],
 	changePW : [
 		 {
 		   "label": "Old Password",

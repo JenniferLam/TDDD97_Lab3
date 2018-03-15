@@ -19,6 +19,8 @@ var source_welcome;
 var template_welcome;
 var source_profile;
 var template_profile;
+var source_personalInfo;
+var template_personalInfo;
 
 // Implement before close the browser
 window.onbeforeunload = function(){
@@ -57,6 +59,8 @@ compileTemplate = function() {
     template_welcome = Handlebars.compile(source_welcome);
     source_profile = document.getElementById("profileview").innerHTML;
     template_profile = Handlebars.compile(source_profile);
+    source_personalInfo = document.getElementById("personalInfo").innerHTML;
+    template_personalInfo = Handlebars.compile(source_personalInfo);
 }
 
 /* For live data presentation, 
@@ -159,12 +163,11 @@ displayView = function(){
         document.getElementById("container").innerHTML = template_welcome(template_data);
         //document.getElementById("container").innerHTML = document.getElementById("welcomeview").innerHTML;
     }else{        
-        //document.getElementById("container").innerHTML = document.getElementById("profileview").innerHTML;
+        loadPersonalProfile(template_data);
         document.getElementById("container").innerHTML = template_profile(template_data);
-        ;
+        //document.getElementById("container").innerHTML = document.getElementById("profileview").innerHTML;
 		// Load the D3 graph
         setupGraph();
-        loadPersonalProfile();
         retrieveMsg('home');
     }
 }
@@ -582,7 +585,7 @@ selectTab = function(event, tabName){
 }
 
 // Extract and display the personal information of current user in home tab
-loadPersonalProfile = function(){
+loadPersonalProfile = function(template_profile){
 
     var currentToken = localStorage.getItem("token");
     var con = new XMLHttpRequest();
@@ -595,16 +598,27 @@ loadPersonalProfile = function(){
                 var data = response.data;
                 // Update live data
 				updateGraph(graph_numPost, response.NumOfPost, response.TotalOfPost);
-                // for (int i =0; i<personalInfo_home_name.length;i++;){
-                //     document.getElementsByName(personalInfo_home_name[i])[0].innerHTML = template_profile()
-
-                // }
-                document.getElementsByName("home_personalInfo_email")[0].innerHTML = data[0]['email'];
-                document.getElementsByName("home_personalInfo_firstname")[0].innerHTML = data[0]['firstname'];
-                document.getElementsByName("home_personalInfo_familyname")[0].innerHTML = data[0]['familyname'];
-                document.getElementsByName("home_personalInfo_gender")[0].innerHTML = data[0]['gender'];
-                document.getElementsByName("home_personalInfo_city")[0].innerHTML = data[0]['city'];
-                document.getElementsByName("home_personalInfo_country")[0].innerHTML = data[0]['country'];
+                var result = [];
+                var cnt = 0;
+                for (var key in template_data) {
+                    if (key != 'personalInfo_home') {
+                        continue;
+                    }
+                    for (var templateKey in template_data[key]) {
+                        var template_label = template_data[key][templateKey]['label'];
+                        var template_name = template_data[key][templateKey]['name'];
+                        var template_tab = template_data[key][templateKey]['tab'];
+                        var template_id = template_data[key][templateKey]['id'];
+                        for (var dataKey in data[0]) {
+                            if (dataKey == template_name) {
+                                result.push({"label": template_label, "name": template_name, "id": template_id, "tab": template_tab, "value": data[0][dataKey]});
+                            }
+                        }
+                        cnt++;
+                    }
+                }
+                document.getElementById("personalInfo_home").innerHTML = template_personalInfo(result);
+            
             }
         }
     };
@@ -625,7 +639,7 @@ postMsg = function(tab, form){
     if (tab == "home"){
         email = document.getElementsByName("home_personalInfo_email")[0].innerHTML;
     } else {
-        email = document.getElementsByName("email_otherUser")[0].innerHTML;
+        email = document.getElementById("email_otherUser").innerHTML;
     }    
     
     var msg = form.postArea.value.trim();
@@ -692,7 +706,7 @@ retrieveMsg = function(tab){
     } else {
         
         document.getElementById("msgWall_browse").innerHTML = "";
-        var email = document.getElementsByName("email_otherUser")[0].innerHTML;
+        var email = document.getElementById("email_otherUser").innerHTML;
 
         con.open("GET",'/getUserMessagesByEmail/'+currentToken+"/"+email,true);
 
@@ -738,18 +752,41 @@ searchUser = function(form){
                 //Display user information
                 //Overwrite the existing personal information
                 var data = responseMsg.data[0];
-                document.getElementById("personalInfo_browse").innerHTML = "";
-                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-12\"><h3 class=\"title\">Personal Information</h3></div></div>";
-                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Email: </label></div><div class=\"col-md\"><div id=\"email_otherUser\" name=\"email_otherUser\">" + data['email'] + "</div></div></div>";
-                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>First Name: </label></div><div class=\"col-md\">" + data['firstname'] + "</div></div>";
-                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Family Name: </label></div><div class=\"col-md\">" + data['familyname'] + "</div></div>";
-                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Gender: </label></div><div class=\"col-md\">" + data['gender'] + "</div></div>";
-                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>City: </label></div><div class=\"col-md\">" + data['city'] + "</div></div>";
-                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Country: </label></div><div class=\"col-md\">" + data['country'] + "</div></div>";
+                
+                var result = [];
+                var cnt = 0;
+                for (var key in template_data) {
+                    if (key != 'personalInfo_browse') {
+                        continue;
+                    }
+                    for (var templateKey in template_data[key]) {
+                        var template_label = template_data[key][templateKey]['label'];
+                        var template_name = template_data[key][templateKey]['name'];
+                        var template_tab = template_data[key][templateKey]['tab'];
+                        var template_id = template_data[key][templateKey]['id'];
+                        for (var dataKey in data) {
+                            if (dataKey == template_name) {
+                                result.push({"label": template_label, "name": template_name, "id": template_id, "tab": template_tab, "value": data[dataKey]});
+                            }
+                        }
+                        cnt++;
+                    }
+                }
+                
+
+//                
+//                document.getElementById("personalInfo_browse").innerHTML = "";
+//                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-12\"><h3 class=\"title\">Personal Information</h3></div></div>";
+//                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Email: </label></div><div class=\"col-md\"><div id=\"email_otherUser\" name=\"email_otherUser\">" + data['email'] + "</div></div></div>";
+//                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>First Name: </label></div><div class=\"col-md\">" + data['firstname'] + "</div></div>";
+//                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Family Name: </label></div><div class=\"col-md\">" + data['familyname'] + "</div></div>";
+//                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Gender: </label></div><div class=\"col-md\">" + data['gender'] + "</div></div>";
+//                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>City: </label></div><div class=\"col-md\">" + data['city'] + "</div></div>";
+//                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Country: </label></div><div class=\"col-md\">" + data['country'] + "</div></div>";
 
                 //Display the message wall
                 document.getElementById("msgWallDisplay").innerHTML = document.getElementById("msgwallcontent").innerHTML;
-
+                document.getElementById("personalInfo_browse").innerHTML = template_personalInfo(result);    
                 // Display the message on the wall
                 retrieveMsg('browse');
 
