@@ -153,7 +153,7 @@ var template_data = {
 		   "label": "Country"
 		 }
 	],
-	changePW = [
+	changePW : [
 		 {
 		   "label": "Old Password",
 		   "name": "oldPW"

@@ -595,12 +595,10 @@ loadPersonalProfile = function(){
                 var data = response.data;
                 // Update live data
 				updateGraph(graph_numPost, response.NumOfPost, response.TotalOfPost);
-                for (int i =0; i<personalInfo_home_name.length;i++;){
-                    document.getElementsByName(personalInfo_home_name[i])[0].innerHTML = template_profile()
+                // for (int i =0; i<personalInfo_home_name.length;i++;){
+                //     document.getElementsByName(personalInfo_home_name[i])[0].innerHTML = template_profile()
 
-                }
-
-
+                // }
                 document.getElementsByName("home_personalInfo_email")[0].innerHTML = data[0]['email'];
                 document.getElementsByName("home_personalInfo_firstname")[0].innerHTML = data[0]['firstname'];
                 document.getElementsByName("home_personalInfo_familyname")[0].innerHTML = data[0]['familyname'];
