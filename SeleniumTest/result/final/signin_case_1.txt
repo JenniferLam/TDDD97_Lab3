@@ -8,7 +8,7 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Go to the profile view
-6. Verify the username 
+6. Verify the username: The username are the same.
 7. Close the browser
 
 Test Result: Passed

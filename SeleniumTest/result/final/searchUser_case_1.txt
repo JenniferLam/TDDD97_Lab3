@@ -8,11 +8,12 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Go to the profile view
-6. Verify the username 
+6. Verify the username The username are the same.
 7. Go to Browse Tab
 8. Type a non-exist email address
 9. Click the Search Button
 10. Verify error message - No such user.
+The error message are the same.
 11. Close the browser
 
 Test Result: Passed

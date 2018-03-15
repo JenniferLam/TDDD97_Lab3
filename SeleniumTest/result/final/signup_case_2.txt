@@ -7,6 +7,7 @@ Test Steps:
 2. Fill in all signup information
 3. Click the Sign Up button
 4. Verify error message - User already exists.
+The error message are the same.
 5. Close the browser
 
 Test Result: Passed

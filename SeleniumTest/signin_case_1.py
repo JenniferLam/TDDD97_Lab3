@@ -5,11 +5,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import common
 
-# Create chrome webdriver
-driver=webdriver.Chrome()
+# # Create chrome webdriver
+driver = webdriver.Chrome()
 
 # Test Case Information
-result = True
+result = True	
 step_num = 1
 f = common.createFileObj('signin_case_1')
 scenario = 'Scenario: Sign in successfully'
@@ -26,6 +26,7 @@ username = driver.find_element_by_id("signin_email")
 password = driver.find_element_by_id("signin_pw")
 
 username.send_keys("abc@abc")
+
 f.write(str(step_num)+'. '+'Fill in the username\n')
 step_num+= 1
 
@@ -50,13 +51,11 @@ driver.save_screenshot('./result/signin_case_1_1.png')
 	
 # To make sure if the user is as same as sign in username
 email = driver.find_element_by_name("home_personalInfo_email")
-f.write(str(step_num)+'. '+'Verify the username ')
+
+f.write(str(step_num)+'. '+'Verify the username: ')
+f.write(common.compareText("abc@abc",email.text,"username"))
 step_num+= 1
 
-if email.text != "abc@abc":
-	result = False
-	f.write('(WRONG USER): '+ email.text)
-f.write('\n')
 
 # End of the test
 driver.quit()

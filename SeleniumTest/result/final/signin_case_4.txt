@@ -8,6 +8,7 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Verify the error message - Please type valid email address.
+The error message are the same.
 6. Close the browser
 
 Test Result: Passed

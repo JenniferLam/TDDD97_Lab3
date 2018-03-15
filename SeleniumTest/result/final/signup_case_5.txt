@@ -7,6 +7,8 @@ Test Steps:
 2. Fill in all signup information
 3. Click the Sign Up button
 4. Sign up a new user - Successfully created a new user.
+The error message are the same.
+The login message are the same.
 5. Close the browser
 
 Test Result: Passed

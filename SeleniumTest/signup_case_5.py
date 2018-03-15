@@ -55,17 +55,13 @@ step_num+= 1
 msgtext = "Successfully created a new user."
 msgtext2 = "You may try your first login."
 
-f.write(str(step_num)+'. '+'Sign up a new user - '+msgtext)
+f.write(str(step_num)+'. '+'Sign up a new user - '+msgtext+"\n")
 step_num+= 1
 
 errormsg = driver.find_element_by_id("errormsgSignUp")
 loginmsg = driver.find_element_by_id("loginmsg")
-
-if errormsg.text != msgtext or loginmsg.text != msgtext2:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-
-f.write('\n')
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
+f.write(common.compareText(msgtext2,loginmsg.text,"login message"))
 
 # End of the test
 driver.quit()

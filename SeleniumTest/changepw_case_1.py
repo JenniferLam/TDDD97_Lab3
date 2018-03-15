@@ -50,13 +50,10 @@ driver.save_screenshot('./result/changepw_case_1_1.png')
 	
 # To make sure if the user is as same as sign in username
 email = driver.find_element_by_name("home_personalInfo_email")
-f.write(str(step_num)+'. '+'Verify the username ')
+f.write(str(step_num)+'. '+'Verify the username '+"\n")
+f.write(common.compareText("abc@abc",email.text,"username"))
 step_num+= 1
 
-if email.text != "abc@abc":
-	result = False
-	f.write('(WRONG USER): '+email.text)
-f.write('\n')
 
 # Go to account tab
 account_tab = driver.find_element_by_id("tab_account")
@@ -86,12 +83,8 @@ errormsg = driver.find_element_by_id("errormsgPW")
 msgtext = "Wrong password."
 
 f.write(str(step_num)+'. '+'Verify the error message - ')
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 step_num+= 1
-
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+ errormsg.text)
-f.write('\n')
 
 # End of the test
 driver.quit()

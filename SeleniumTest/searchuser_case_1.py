@@ -51,12 +51,8 @@ driver.save_screenshot('./result/searchuser_case_1_1.png')
 # To make sure if the user is as same as sign in username
 email = driver.find_element_by_name("home_personalInfo_email")
 f.write(str(step_num)+'. '+'Verify the username ')
+f.write(common.compareText("abc@abc",email.text,"username"))
 step_num+= 1
-
-if email.text != "abc@abc":
-	result = False
-	f.write('(WRONG USER): '+ email.text)
-f.write('\n')
 
 # Go to browse tab
 browse_tab = driver.find_element_by_id("tab_browse")
@@ -79,14 +75,11 @@ step_num+= 1
 msgtext = "No such user."
 driver.save_screenshot('./result/searchuser_case_1_2.png')
 
-f.write(str(step_num)+'. '+'Verify error message - '+msgtext)
+f.write(str(step_num)+'. '+'Verify error message - '+msgtext+"\n")
 step_num+= 1
 
 errormsg = driver.find_element_by_id("errorMsgSearch")
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-f.write('\n')
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 
 # End of the test
 driver.quit()

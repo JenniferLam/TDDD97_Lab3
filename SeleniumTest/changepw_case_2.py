@@ -52,11 +52,7 @@ driver.save_screenshot('./result/changepw_case_2_1.png')
 email = driver.find_element_by_name("home_personalInfo_email")
 f.write(str(step_num)+'. '+'Verify the username ')
 step_num+= 1
-
-if email.text != "abc@abc":
-	result = False
-	f.write('(WRONG USER): '+email.text)
-f.write('\n')
+f.write(common.compareText("abc@abc",email.text,"username"))
 
 # Go to account tab
 account_tab = driver.find_element_by_id("tab_account")
@@ -84,13 +80,9 @@ driver.save_screenshot('./result/changepw_case_2_2.png')
 
 errormsg = driver.find_element_by_id("errormsgPW")
 msgtext = "The password should have at least 8 characters."
-f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext+"\n")
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 step_num+= 1
-
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-f.write('\n')
 
 # Fill in new password which is same as old password
 oldPW.clear()
@@ -108,13 +100,9 @@ step_num+= 1
 
 driver.save_screenshot('./result/changepw_case_2_3.png')
 msgtext = "New password cannot be as same as old password."
-f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext+"\n")
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 step_num+= 1
-
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-f.write('\n')
 
 # Fill in wrong confirm password
 oldPW.clear()
@@ -132,13 +120,9 @@ step_num+= 1
 
 driver.save_screenshot('./result/changepw_case_2_4.png')
 msgtext = "The password must be the same."
-f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext+"\n")
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 step_num+= 1
-
-if errormsg.text != "The password must be the same.":
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-f.write('\n')
 
 # End of the test
 driver.quit()

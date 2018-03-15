@@ -8,9 +8,11 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Verify the error message - Wrong username or password.
+The error message are the same.
 6. Fill in the username
 7. Fill in the wrong password
 8. Verify the error message - Wrong username or password.
+The error message are the same.
 9. Close the browser
 
 Test Result: Passed

@@ -7,30 +7,40 @@ Test Steps:
 2. Leave all fields empty
 3. Click the Sign Up button
 4. Verify the error message - Please type your first name.
+The error message are the same.
 5. Fill in the first name
 6. Click the Sign Up button
 7. Verify the error message - Please type your family name.
+The error message are the same.
 8. Fill in the family name
 9. Click the Sign Up button
 10. Verify the error message - Please select your gender.
+The error message are the same.
 11. Select the gender
 12. Click the Sign Up button
 13. Verify the error message - Please type your city.
+The error message are the same.
 14. Fill in the city
 15. Click the Sign Up button
 16. Verify the error message - Please type your country.
+The error message are the same.
 17. Fill in the country
 18. Click the Sign Up button
 19. Verify the error message - Please type your email.
+The error message are the same.
 20. Fill in the email
 21. Click the Sign Up button
 22. Verify the error message - Please type your password.
+The error message are the same.
 23. Fill in the password
 24. Click the Sign Up button
 25. Verify the error message - Please confirm your password.
+The error message are the same.
 26. Fill in the repeatPSW
 27. Click the Sign Up button
 28. Sign up a new user - Successfully created a new user.
+The error message are the same.
+The login message are the same.
 29. Close the browser
 
 Test Result: Passed

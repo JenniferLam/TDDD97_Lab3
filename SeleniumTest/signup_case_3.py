@@ -54,14 +54,9 @@ driver.save_screenshot('./result/signup_case_3_1.png')
 errormsg = driver.find_element_by_id("errormsgSignUp")
 msgtext = "Please type valid email address."
 
-f.write(str(step_num)+'. '+'Verify error message - '+msgtext)
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext + "\n")
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 step_num+= 1
-
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-
-f.write('\n')
 
 email.clear()
 email.send_keys("@dummy1gmail.com")
@@ -75,20 +70,14 @@ step_num+= 1
 
 driver.save_screenshot('./result/signup_case_3_2.png')
 msgtext = "Please type valid email address."
-f.write(str(step_num)+'. '+'Verify error message - '+msgtext)
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext + "\n")
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 step_num+= 1
-
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-
-f.write('\n')
 
 email.clear()
 email.send_keys("dummy1gmail.com@")
 f.write(str(step_num)+'. '+'Fill in another invalid email format\n')
 step_num+= 1
-
 
 signup_button.click()
 f.write(str(step_num)+'. '+'Click the Sign Up button\n')
@@ -96,14 +85,10 @@ step_num+= 1
 
 driver.save_screenshot('./result/signup_case_3_3.png')
 msgtext = "Please type valid email address."
-f.write(str(step_num)+'. '+'Verify error message ' + msgtext)
+f.write(str(step_num)+'. '+'Verify error message ' + msgtext+"\n")
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 step_num+= 1
 
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-
-f.write('\n')
 
 # End of the test
 driver.quit()

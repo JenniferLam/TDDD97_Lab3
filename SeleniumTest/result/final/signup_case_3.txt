@@ -6,13 +6,16 @@ Test Steps:
 1. Open the browser
 2. Fill in all signup information with invalid email
 3. Click the Sign Up button
-4. Verify error message - Please type valid email address.
+4. Verify the error message - Please type valid email address.
+The error message are the same.
 5. Fill in another invalid email format
 6. Click the Sign Up button
-7. Verify error message - Please type valid email address.
+7. Verify the error message - Please type valid email address.
+The error message are the same.
 8. Fill in another invalid email format
 9. Click the Sign Up button
 10. Verify error message Please type valid email address.
+The error message are the same.
 11. Close the browser
 
 Test Result: Passed

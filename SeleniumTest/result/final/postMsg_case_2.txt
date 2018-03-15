@@ -8,16 +8,16 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Go to the profile view
-6. Verify the username 
+6. Verify the username The username are the same.
 7. Go to Browse Tab
 8. Type a friend's email
 9. Click the Search Button
-10. The user profile is displayed 
+10. The user profile is displayed The username are the same.
 11. Write the message in the post area
-12. Receive the feedback from the server - Message posted.
+12. Receive the feedback from the server - Message posted.The feedback are the same.
 13. The latest message is displayed on the wall 
-From: abc@abc
-Testing on 10 Mar 2018 from abc@abc
+The writer are the same.
+The post message are the same.
 14. Close the browser
 
 Test Result: Passed

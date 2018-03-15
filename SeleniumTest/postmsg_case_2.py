@@ -51,12 +51,8 @@ driver.save_screenshot('./result/postmsg_case_2_1.png')
 # To make sure if the user is as same as sign in username
 email = driver.find_element_by_name("home_personalInfo_email")
 f.write(str(step_num)+'. '+'Verify the username ')
+f.write(common.compareText("abc@abc",email.text,"username"))
 step_num+= 1
-
-if email.text != "abc@abc":
-	result = False
-	f.write('(WRONG USER): '+ email.text)
-f.write('\n')
 
 # Go to browse tab
 browse_tab = driver.find_element_by_id("tab_browse")
@@ -81,11 +77,8 @@ element_present = EC.presence_of_element_located((By.NAME,'email_otherUser'))
 WebDriverWait(driver, 90).until(element_present)
 email_browse = driver.find_element_by_name("email_otherUser")
 f.write(str(step_num)+'. '+'The user profile is displayed ')
+f.write(common.compareText(target_user,email_browse.text,"username"))
 step_num+= 1
-if email_browse.text != target_user:
-	result = False
-	f.write("(WRONG USER): "+email_browse.text)
-f.write('\n')
 
 # Post message to own profile
 postbox = driver.find_element_by_id("postBox_browse")
@@ -103,27 +96,19 @@ driver.save_screenshot('./result/postmsg_case_2_2.png')
 feedback = driver.find_element_by_id("errormsgPostWall_browse")
 msgtext = "Message posted."
 f.write(str(step_num)+'. '+'Receive the feedback from the server - '+msgtext)
+f.write(common.compareText(msgtext,feedback.text,"feedback"))
 step_num+= 1
 
-if feedback.text != msgtext:
-	result = False
-	f.write('(UNEXPECTED FEEDBACK): '+ feedback.text)
-f.write('\n')
-
 # The latest message is displayed on the wall automatically
-writer = driver.find_element_by_xpath("//*[@id=\"msgWall_browse\"]/div[1]")
-postedMsg = driver.find_element_by_xpath("//*[@id=\"msgWall_browse\"]/div[2]")
+writer = driver.find_element_by_xpath("//*[@id=\"msgWall_browse\"]/div[2]/div/div[1]/div")
+postedMsg = driver.find_element_by_xpath("//*[@id=\"msgWall_browse\"]/div[2]/div/div[2]/div[1]/div")
 
 driver.save_screenshot('./result/postmsg_case_2_3.png')
 
-f.write(str(step_num)+'. '+'The latest message is displayed on the wall ')
+f.write(str(step_num)+'. '+'The latest message is displayed on the wall \n')
+f.write(common.compareText("From: abc@abc",writer.text,"writer"))
+f.write(common.compareText(content,postedMsg.text,"post message"))
 step_num+= 1
-if writer.text!= "From: abc@abc" or postedMsg.text != content:
-	result = False
-	f.write('(MESSAGE IS OUTDATED)')
-f.write('\n')
-f.write(writer.text + '\n')
-f.write(postedMsg.text + '\n')
 
 # End of the test
 driver.quit()

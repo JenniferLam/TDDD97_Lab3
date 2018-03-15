@@ -54,14 +54,9 @@ driver.save_screenshot('./result/signup_case_2_1.png')
 errormsg = driver.find_element_by_id("errormsgSignUp")
 
 msgtext = "User already exists."
-f.write(str(step_num)+'. '+'Verify error message - '+msgtext)
+f.write(str(step_num)+'. '+'Verify error message - '+msgtext+"\n")
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 step_num+= 1
-
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-
-f.write('\n')
 
 # End of the test
 driver.quit()

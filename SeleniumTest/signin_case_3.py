@@ -33,16 +33,12 @@ step_num+= 1
 driver.implicitly_wait(3)
 
 msgtext = "Please type your email."
-f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext+"\n")
 step_num+= 1
 
 driver.save_screenshot('./result/signin_case_3_1.png')
 errormsg = driver.find_element_by_id("errormsgSignIn")
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-
-f.write('\n')
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 
 # Only fill in the username
 username.send_keys("abc@abc")
@@ -63,16 +59,11 @@ driver.implicitly_wait(3)
 
 
 msgtext = "Please type your password."
-f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext+"\n")
 step_num+= 1
 
 driver.save_screenshot('./result/signin_case_3_2.png')
-
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-
-f.write('\n')
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 
 # Only fill in the password
 username.clear()
@@ -91,16 +82,12 @@ step_num+= 1
 driver.implicitly_wait(3)
 
 msgtext = "Please type your email."
-f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext+"\n")
 step_num+= 1
 
 driver.save_screenshot('./result/signin_case_3_3.png')
 
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-
-f.write('\n')
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 
 # End of the test
 driver.quit()

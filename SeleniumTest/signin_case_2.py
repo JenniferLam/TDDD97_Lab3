@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 import common
 
 # Create chrome webdriver
-driver=webdriver.Chrome()
+driver = webdriver.Chrome()
 
 # Test Case Information
 result = True
@@ -43,14 +43,10 @@ step_num+= 1
 driver.save_screenshot('./result/signin_case_2_1.png')
 
 msgtext = "Wrong username or password."
-f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext+ "\n")
 step_num+= 1
 errormsg = driver.find_element_by_id("errormsgSignIn")
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-
-f.write('\n')
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 
 # Correct the username but fill in wrong password
 # Wrong Username
@@ -65,14 +61,9 @@ step_num+= 1
 driver.save_screenshot('./result/signin_case_2_2.png')
 
 msgtext = "Wrong username or password."
-f.write(str(step_num)+'. '+'Verify the error message - '+msgtext)
+f.write(str(step_num)+'. '+'Verify the error message - '+msgtext + "\n")
 step_num+= 1
-
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-
-f.write('\n')
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 
 # End of the test
 driver.quit()

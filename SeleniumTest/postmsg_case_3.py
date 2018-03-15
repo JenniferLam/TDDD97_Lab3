@@ -51,12 +51,8 @@ driver.save_screenshot('./result/postmsg_case_3_1.png')
 # To make sure if the user is as same as sign in username
 email = driver.find_element_by_name("home_personalInfo_email")
 f.write(str(step_num)+'. '+'Verify the username ')
+f.write(common.compareText("abc@abc",email.text,"username"))
 step_num+= 1
-
-if email.text != "abc@abc":
-	result = False
-	f.write('(WRONG USER): '+ email.text)
-f.write('\n')
 
 # Post message to own profile
 postbox_home = driver.find_element_by_name("postArea")
@@ -72,30 +68,22 @@ post_button_home.click()
 # Feedback is expected from the server
 feedback_home = driver.find_element_by_id("errormsgPostWall_home")
 msgtext = "Message posted."
-f.write(str(step_num)+'. '+'Receive the feedback from the server - '+msgtext)
+f.write(str(step_num)+'. '+'Receive the feedback from the server - '+msgtext+"\n")
+f.write(common.compareText(msgtext,feedback_home.text,"feedback"))
 step_num+= 1
 
 driver.save_screenshot('./result/postmsg_case_3_2.png')
 
-if feedback_home.text != msgtext:
-	result = False
-	f.write('(UNEXPECTED FEEDBACK): '+ feedback_home.text)
-f.write('\n')
-
 # The latest message is displayed on the wall automatically
-writer_home = driver.find_element_by_xpath("//*[@id=\"msgWall\"]/div[1]")
-postedMsg_home = driver.find_element_by_xpath("//*[@id=\"msgWall\"]/div[2]")
+writer_home = driver.find_element_by_xpath("//*[@id=\"msgWall\"]/div[2]/div/div[1]/div")
+postedMsg_home = driver.find_element_by_xpath("//*[@id=\"msgWall\"]/div[2]/div/div[2]/div[1]/div")
 
 driver.save_screenshot('./result/postmsg_case_3_3.png')
 
-f.write(str(step_num)+'. '+'The latest message is displayed on the wall ')
+f.write(str(step_num)+'. '+'The latest message is displayed on the wall \n')
 step_num+= 1
-if writer_home.text!= "From: abc@abc" or postedMsg_home.text != content:
-	result = False
-	f.write('(MESSAGE IS OUTDATED)')
-f.write('\n')
-f.write(writer_home.text + '\n')
-f.write(postedMsg_home.text + '\n')
+f.write(common.compareText("From: abc@abc",writer_home.text,"writer"))
+f.write(common.compareText(content,postedMsg_home.text,"post message"))
 
 # Go to browse tab
 browse_tab = driver.find_element_by_id("tab_browse")
@@ -122,27 +110,20 @@ email_browse = driver.find_element_by_name("email_otherUser")
 
 driver.save_screenshot('./result/postmsg_case_3_4.png')
 
-f.write(str(step_num)+'. '+'The user profile is displayed ')
+f.write(str(step_num)+'. '+'The user profile is displayed \n')
+f.write(common.compareText(target_user,email_browse.text,"username"))
 step_num+= 1
-if email_browse.text != target_user:
-	result = False
-	f.write("(WRONG USER): "+email_browse.text)
-f.write('\n')
 
 # The message posted in home tab should be retrieved
-writer_browse = driver.find_element_by_xpath("//*[@id=\"msgWall_browse\"]/div[1]")
-postedMsg_browse = driver.find_element_by_xpath("//*[@id=\"msgWall_browse\"]/div[2]")
+writer_browse = driver.find_element_by_xpath("//*[@id=\"msgWall_browse\"]/div[2]/div/div[1]/div")
+postedMsg_browse = driver.find_element_by_xpath("//*[@id=\"msgWall_browse\"]/div[2]/div/div[2]/div[1]/div")
 
 driver.save_screenshot('./result/postmsg_case_3_5.png')
 
-f.write(str(step_num)+'. '+'The message posted in home tab is retrieved in browse tab ')
+f.write(str(step_num)+'. '+'The message posted in home tab is retrieved in browse tab \n')
+f.write(common.compareText("From: abc@abc",writer_browse.text,"writer"))
+f.write(common.compareText(content,postedMsg_browse.text,"post message"))
 step_num+= 1
-if writer_browse.text!= "From: abc@abc" or postedMsg_browse.text != content:
-	result = False
-	f.write('(CANNOT RETRIEVE MESSAGE)')
-f.write('\n')
-f.write(writer_browse.text + '\n')
-f.write(postedMsg_browse.text + '\n')
 
 # Post message to own profile
 postbox_browse = driver.find_element_by_id("postBox_browse")
@@ -160,28 +141,20 @@ driver.save_screenshot('./result/postmsg_case_3_6.png')
 # Feedback is expected from the server
 feedback_browse = driver.find_element_by_id("errormsgPostWall_browse")
 msgtext = "Message posted."
-f.write(str(step_num)+'. '+'Receive the feedback from the server - '+msgtext)
+f.write(str(step_num)+'. '+'Receive the feedback from the server - '+msgtext+"\n")
+f.write(common.compareText(msgtext,feedback_browse.text,"feedback"))
 step_num+= 1
-
-if feedback_browse.text != msgtext:
-	result = False
-	f.write('(UNEXPECTED FEEDBACK): '+ feedback_browse.text)
-f.write('\n')
 
 # The message is displayed on the wall in browse tab
 driver.save_screenshot('./result/postmsg_case_3_6.png')
 
-writer_browse = driver.find_element_by_xpath("//*[@id=\"msgWall_browse\"]/div[1]")
-postedMsg_browse = driver.find_element_by_xpath("//*[@id=\"msgWall_browse\"]/div[2]")
+writer_browse = driver.find_element_by_xpath("//*[@id=\"msgWall_browse\"]/div[2]/div/div[1]/div")
+postedMsg_browse = driver.find_element_by_xpath("//*[@id=\"msgWall_browse\"]/div[2]/div/div[2]/div[1]/div")
 
 f.write(str(step_num)+'. '+'The latest message is posted ')
+f.write(common.compareText("From: abc@abc",writer_browse.text,"writer"))
+f.write(common.compareText(content,postedMsg_browse.text,"post message"))
 step_num+= 1
-if writer_browse.text!= "From: abc@abc" or postedMsg_browse.text != content:
-	result = False
-	f.write('(CANNOT RETRIEVE MESSAGE)')
-f.write('\n')
-f.write(writer_browse.text + '\n')
-f.write(postedMsg_browse.text + '\n')
 
 # Go back to home tab and refresh
 home_tab = driver.find_element_by_id("tab_home")
@@ -198,18 +171,15 @@ step_num+= 1
 # The wall should display the message posted in browse tab
 
 driver.save_screenshot('./result/postmsg_case_3_7.png')
-writer_home = driver.find_element_by_xpath("//*[@id=\"msgWall\"]/div[1]")
-postedMsg_home = driver.find_element_by_xpath("//*[@id=\"msgWall\"]/div[2]")
+writer_home = driver.find_element_by_xpath("//*[@id=\"msgWall\"]/div[2]/div/div[1]/div")
+postedMsg_home = driver.find_element_by_xpath("//*[@id=\"msgWall\"]/div[2]/div/div[2]/div[1]/div")
 
 
 f.write(str(step_num)+'. '+'Message posted in browse tab is displayed in home tab ')
 step_num+= 1
-if writer_home.text!= "From: abc@abc" or postedMsg_home.text != content:
-	result = False
-	f.write('(CANNOT RETRIEVE MESSAGE)')
-f.write('\n')
-f.write(writer_home.text + '\n')
-f.write(postedMsg_home.text + '\n')
+f.write(common.compareText("From: abc@abc",writer_home.text,"writer"))
+f.write(common.compareText(content,postedMsg_home.text,"post message"))
+
 
 # End of the test
 driver.quit()

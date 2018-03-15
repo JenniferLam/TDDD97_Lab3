@@ -51,12 +51,9 @@ driver.save_screenshot('./result/changepw_case_3_1.png')
 # To make sure if the user is as same as sign in username
 email = driver.find_element_by_name("home_personalInfo_email")
 f.write(str(step_num)+'. '+'Verify the username ')
+f.write(common.compareText("abc@abc",email.text,"username"))
 step_num+= 1
 
-if email.text != "abc@abc":
-	result = False
-	f.write('(WRONG USER): '+email.text)
-f.write('\n')
 
 # Go to account tab
 account_tab = driver.find_element_by_id("tab_account")
@@ -81,13 +78,10 @@ driver.save_screenshot('./result/changepw_case_3_2.png')
 
 errormsg = driver.find_element_by_id("errormsgPW")
 msgtext = "Please type your old password."
-f.write(str(step_num)+'. '+'Verify the error message '+msgtext)
+f.write(str(step_num)+'. '+'Verify the error message '+msgtext+"\n")
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 step_num+= 1
 
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-f.write('\n')
 
 # Fill in only old password
 oldPW.send_keys("abcd1234")
@@ -102,13 +96,9 @@ step_num+= 1
 driver.save_screenshot('./result/changepw_case_3_3.png')
 
 msgtext = "Please type your new password."
-f.write(str(step_num)+'. '+'Verify the error message '+msgtext)
+f.write(str(step_num)+'. '+'Verify the error message '+msgtext+"\n")
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 step_num+= 1
-
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE):' + errormsg.text)
-f.write('\n')
 
 # Fill in new password
 newPW.send_keys("qwer1234")
@@ -123,13 +113,10 @@ step_num+= 1
 driver.save_screenshot('./result/changepw_case_3_4.png')
 
 msgtext = "Please confirm your password."
-f.write(str(step_num)+'. '+'Verify the error message '+msgtext)
+f.write(str(step_num)+'. '+'Verify the error message '+msgtext+"\n")
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 step_num+= 1
 
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-f.write('\n')
 
 # End of the test
 driver.quit()

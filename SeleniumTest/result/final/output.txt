@@ -8,9 +8,11 @@ Test Steps:
 3. Fill in the password less than 8 characters
 4. Click the Sign Up button
 5. Verify error message - The password should have at least 8 characters.
+The error message are the same.
 6. Fill in the different password in repeatPSW 
 7. Click the Sign Up button
 8. Verify error message - The password must be the same.
+The error message are the same.
 9. Close the browser
 
 Test Result: Passed
@@ -24,6 +26,8 @@ Test Steps:
 2. Fill in all signup information
 3. Click the Sign Up button
 4. Sign up a new user - Successfully created a new user.
+The error message are the same.
+The login message are the same.
 5. Close the browser
 
 Test Result: Passed
@@ -37,30 +41,40 @@ Test Steps:
 2. Leave all fields empty
 3. Click the Sign Up button
 4. Verify the error message - Please type your first name.
+The error message are the same.
 5. Fill in the first name
 6. Click the Sign Up button
 7. Verify the error message - Please type your family name.
+The error message are the same.
 8. Fill in the family name
 9. Click the Sign Up button
 10. Verify the error message - Please select your gender.
+The error message are the same.
 11. Select the gender
 12. Click the Sign Up button
 13. Verify the error message - Please type your city.
+The error message are the same.
 14. Fill in the city
 15. Click the Sign Up button
 16. Verify the error message - Please type your country.
+The error message are the same.
 17. Fill in the country
 18. Click the Sign Up button
 19. Verify the error message - Please type your email.
+The error message are the same.
 20. Fill in the email
 21. Click the Sign Up button
 22. Verify the error message - Please type your password.
+The error message are the same.
 23. Fill in the password
 24. Click the Sign Up button
 25. Verify the error message - Please confirm your password.
+The error message are the same.
 26. Fill in the repeatPSW
 27. Click the Sign Up button
 28. Sign up a new user - Successfully created a new user.
+The error message are the same.
+The login message are the same.
 29. Close the browser
 
 Test Result: Passed
@@ -74,6 +88,7 @@ Test Steps:
 2. Fill in all signup information
 3. Click the Sign Up button
 4. Verify error message - User already exists.
+The error message are the same.
 5. Close the browser
 
 Test Result: Passed
@@ -86,13 +101,16 @@ Test Steps:
 1. Open the browser
 2. Fill in all signup information with invalid email
 3. Click the Sign Up button
-4. Verify error message - Please type valid email address.
+4. Verify the error message - Please type valid email address.
+The error message are the same.
 5. Fill in another invalid email format
 6. Click the Sign Up button
-7. Verify error message - Please type valid email address.
+7. Verify the error message - Please type valid email address.
+The error message are the same.
 8. Fill in another invalid email format
 9. Click the Sign Up button
 10. Verify error message Please type valid email address.
+The error message are the same.
 11. Close the browser
 
 Test Result: Passed
@@ -105,14 +123,17 @@ Test Steps:
 1. Open the browser
 2. Click the Sign In button
 3. Verify the error message - Please type your email.
+The error message are the same.
 4. Fill in the username
 5. No password
 6. Click the Sign In button
 7. Verify the error message - Please type your password.
+The error message are the same.
 8. No username
 9. Fill in the password
 10. Click the Sign In button
 11. Verify the error message - Please type your email.
+The error message are the same.
 12. Close the browser
 
 Test Result: Passed
@@ -127,9 +148,11 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Verify the error message - Wrong username or password.
+The error message are the same.
 6. Fill in the username
 7. Fill in the wrong password
 8. Verify the error message - Wrong username or password.
+The error message are the same.
 9. Close the browser
 
 Test Result: Passed
@@ -144,7 +167,7 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Go to the profile view
-6. Verify the username 
+6. Verify the username: The username are the same.
 7. Close the browser
 
 Test Result: Passed
@@ -159,6 +182,7 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Verify the error message - Please type valid email address.
+The error message are the same.
 6. Close the browser
 
 Test Result: Passed
@@ -173,17 +197,20 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Go to the profile view
-6. Verify the username 
+6. Verify the username The username are the same.
 7. Go to Account Tab
 8. Fill in nothing
 9. Click the ChangePW button
 10. Verify the error message Please type your old password.
+The error message are the same.
 11. Fill in old password only
 12. Click the ChangePW button
 13. Verify the error message Please type your new password.
+The error message are the same.
 14. Fill in new password
 15. Click the ChangePW button
 16. Verify the error message Please confirm your password.
+The error message are the same.
 17. Close the browser
 
 Test Result: Passed
@@ -198,17 +225,20 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Go to the profile view
-6. Verify the username 
+6. Verify the username The username are the same.
 7. Go to Account Tab
 8. Fill in new password less than 8 characters
 9. Click the ChangePW button
 10. Verify the error message - The password should have at least 8 characters.
+The error message are the same.
 11. Fill in new password which is same as old password
 12. Click the ChangePW button
 13. Verify the error message - New password cannot be as same as old password.
+The error message are the same.
 14. Fill in wrong confirm password
 15. Click the ChangePW button
 16. Verify the error message - The password must be the same.
+The error message are the same.
 17. Close the browser
 
 Test Result: Passed
@@ -224,10 +254,11 @@ Test Steps:
 4. Click the Sign In button
 5. Go to the profile view
 6. Verify the username 
+The username are the same.
 7. Go to Account Tab
 8. Fill in wrong old password
 9. Click the ChangePW button
-10. Verify the error message - 
+10. Verify the error message - The error message are the same.
 11. Close the browser
 
 Test Result: Passed
@@ -242,11 +273,12 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Go to the profile view
-6. Verify the username 
+6. Verify the username The username are the same.
 7. Go to Browse Tab
 8. Type a non-exist email address
 9. Click the Search Button
 10. Verify error message - No such user.
+The error message are the same.
 11. Close the browser
 
 Test Result: Passed
@@ -261,20 +293,22 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Go to the profile view
-6. Verify the username 
+6. Verify the username The username are the same.
 7. Go to Account Tab
 8. Fill in old password 
 9. Fill in new password
 10. Fill in confirm password
 11. Click the ChangePW button
 12. Change password successfully
+The error message are the same.
 13. Sign out and sign in with new password
 14. Fill in the username
 15. Fill in the password
 16. Click the Sign In button
 17. Go to the profile view
-18. Verify the username 
+18. Verify the username The username are the same.
 19. Recover to old password 
+The error message are the same.
 20. Close the browser
 
 Test Result: Passed
@@ -289,12 +323,13 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Go to the profile view
-6. Verify the username 
+6. Verify the username The username are the same.
 7. Write the message in the post area
 8. Receive the feedback from the server - Message posted.
+The feedback are the same.
 9. The latest message is displayed on the wall 
-From: abc@abc
-Testing on 10 Mar 2018
+The writer are the same.
+The post message are the same.
 10. Close the browser
 
 Test Result: Passed
@@ -309,29 +344,30 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Go to the profile view
-6. Verify the username 
+6. Verify the username The username are the same.
 7. Write the message in the post area in Home Tab
 8. Receive the feedback from the server - Message posted.
+The feedback are the same.
 9. The latest message is displayed on the wall 
-From: abc@abc
-This message should be displayed in home and browse tab
+The writer are the same.
+The post message are the same.
 10. Go to Browse Tab
 11. Search for the current user profile's email
 12. Click the Search Button
 13. The user profile is displayed 
+The username are the same.
 14. The message posted in home tab is retrieved in browse tab 
-From: abc@abc
-This message should be displayed in home and browse tab
+The writer are the same.
+The post message are the same.
 15. Write the message in the post area
 16. Receive the feedback from the server - Message posted.
-17. The latest message is posted 
-From: abc@abc
-Testing on 10 Mar 2018 from abc@abc
+The feedback are the same.
+17. The latest message is posted The writer are the same.
+The post message are the same.
 18. Go back to home tab
 19. Click the Refresh button
-20. Message posted in browse tab is displayed in home tab 
-From: abc@abc
-Testing on 10 Mar 2018 from abc@abc
+20. Message posted in browse tab is displayed in home tab The writer are the same.
+The post message are the same.
 21. Close the browser
 
 Test Result: Passed
@@ -346,16 +382,16 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Go to the profile view
-6. Verify the username 
+6. Verify the username The username are the same.
 7. Go to Browse Tab
 8. Type a friend's email
 9. Click the Search Button
-10. The user profile is displayed 
+10. The user profile is displayed The username are the same.
 11. Write the message in the post area
-12. Receive the feedback from the server - Message posted.
+12. Receive the feedback from the server - Message posted.The feedback are the same.
 13. The latest message is displayed on the wall 
-From: abc@abc
-Testing on 10 Mar 2018 from abc@abc
+The writer are the same.
+The post message are the same.
 14. Close the browser
 
 Test Result: Passed
@@ -370,7 +406,7 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Go to the profile view
-6. Verify the username 
+6. Verify the username The username are the same.
 7. Go to Account Tab
 8. Close the browser
 

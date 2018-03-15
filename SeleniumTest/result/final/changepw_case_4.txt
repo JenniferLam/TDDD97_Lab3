@@ -8,20 +8,22 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Go to the profile view
-6. Verify the username 
+6. Verify the username The username are the same.
 7. Go to Account Tab
 8. Fill in old password 
 9. Fill in new password
 10. Fill in confirm password
 11. Click the ChangePW button
 12. Change password successfully
+The error message are the same.
 13. Sign out and sign in with new password
 14. Fill in the username
 15. Fill in the password
 16. Click the Sign In button
 17. Go to the profile view
-18. Verify the username 
+18. Verify the username The username are the same.
 19. Recover to old password 
+The error message are the same.
 20. Close the browser
 
 Test Result: Passed

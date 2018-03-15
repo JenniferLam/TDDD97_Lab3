@@ -8,12 +8,13 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Go to the profile view
-6. Verify the username 
+6. Verify the username The username are the same.
 7. Write the message in the post area
 8. Receive the feedback from the server - Message posted.
+The feedback are the same.
 9. The latest message is displayed on the wall 
-From: abc@abc
-Testing on 10 Mar 2018
+The writer are the same.
+The post message are the same.
 10. Close the browser
 
 Test Result: Passed

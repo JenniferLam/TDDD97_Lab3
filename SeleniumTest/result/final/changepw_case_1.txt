@@ -9,10 +9,11 @@ Test Steps:
 4. Click the Sign In button
 5. Go to the profile view
 6. Verify the username 
+The username are the same.
 7. Go to Account Tab
 8. Fill in wrong old password
 9. Click the ChangePW button
-10. Verify the error message - 
+10. Verify the error message - The error message are the same.
 11. Close the browser
 
 Test Result: Passed

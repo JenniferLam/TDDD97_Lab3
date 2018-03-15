@@ -58,14 +58,9 @@ step_num+= 1
 driver.save_screenshot('./result/signup_case_4_1.png')
 errormsg = driver.find_element_by_id("errormsgSignUp")
 msgtext = "The password should have at least 8 characters."
-f.write(str(step_num)+'. '+'Verify error message - '+msgtext)
+f.write(str(step_num)+'. '+'Verify error message - '+msgtext+"\n")
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 step_num+= 1
-
-if errormsg.text != msgtext:
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-
-f.write('\n')
 
 # Fill in a different password in repeatPSW
 password.clear()
@@ -84,14 +79,9 @@ step_num+= 1
 driver.save_screenshot('./result/signup_case_4_2.png')
 msgtext = "The password must be the same."
 
-f.write(str(step_num)+'. '+'Verify error message - '+msgtext)
+f.write(str(step_num)+'. '+'Verify error message - '+msgtext+"\n")
+f.write(common.compareText(msgtext,errormsg.text,"error message"))
 step_num+= 1
-
-if errormsg.text != msgtext :
-	result = False
-	f.write('(WRONG ERROR MESSAGE): '+errormsg.text)
-
-f.write('\n')
 
 # End of the test
 driver.quit()

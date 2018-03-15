@@ -8,29 +8,30 @@ Test Steps:
 3. Fill in the password
 4. Click the Sign In button
 5. Go to the profile view
-6. Verify the username 
+6. Verify the username The username are the same.
 7. Write the message in the post area in Home Tab
 8. Receive the feedback from the server - Message posted.
+The feedback are the same.
 9. The latest message is displayed on the wall 
-From: abc@abc
-This message should be displayed in home and browse tab
+The writer are the same.
+The post message are the same.
 10. Go to Browse Tab
 11. Search for the current user profile's email
 12. Click the Search Button
 13. The user profile is displayed 
+The username are the same.
 14. The message posted in home tab is retrieved in browse tab 
-From: abc@abc
-This message should be displayed in home and browse tab
+The writer are the same.
+The post message are the same.
 15. Write the message in the post area
 16. Receive the feedback from the server - Message posted.
-17. The latest message is posted 
-From: abc@abc
-Testing on 10 Mar 2018 from abc@abc
+The feedback are the same.
+17. The latest message is posted The writer are the same.
+The post message are the same.
 18. Go back to home tab
 19. Click the Refresh button
-20. Message posted in browse tab is displayed in home tab 
-From: abc@abc
-Testing on 10 Mar 2018 from abc@abc
+20. Message posted in browse tab is displayed in home tab The writer are the same.
+The post message are the same.
 21. Close the browser
 
 Test Result: Passed
