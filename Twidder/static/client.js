@@ -27,14 +27,27 @@ window.onbeforeunload = function(){
     currentEmail = localStorage.getItem("email");
     currentToken = localStorage.getItem("token");
 
-    var closeBrowse = {
+    if (currentEmail) {
+       var closeBrowse = {
         "type": "unload",
         "email": currentEmail,
-        "token": currentToken
+        }
+        // Inform server to update the total no. of online users
+        ws.send(JSON.stringify(closeBrowse));
+
+        var email_browse = document.getElementById("email_otherUser");
+        if (email_browse) { email_browse = email_browse.innerHTML;}
+        else {email_browse = null;}
+        if (email_browse != null){
+            var updateview = {
+                "type": "updateuserview",
+                "email": email_browse,
+            }
+            ws.send(JSON.stringify(updateview));
+        } 
+
+        ws.close();
     }
-    // Inform server to update the total no. of online users
-    ws.send(JSON.stringify(closeBrowse));
-    ws.close();
 }
 
 window.onload =function(){
@@ -88,6 +101,17 @@ createWebSoc = function(json) {
 
         // Inform the client side to sign out
 		if (message.type == "autoSignOut" && message.value == "SignOut"){
+            // var email_browse = document.getElementById("email_otherUser");
+            // if (email_browse) { email_browse = email_browse.innerHTML;}
+            // else {email_browse = null;}
+            // if (email_browse != null){
+            //     var updateview = {
+            //         "type": "updateuserview",
+            //         "email": email_browse,
+            //     }
+            //     ws.send(JSON.stringify(updateview));
+            // }   
+
             localStorage.removeItem("token");
             localStorage.removeItem("email");
             displayView();
@@ -137,7 +161,6 @@ loadWebSoc = function(){
                         var reload = {
                             "type":"reload",
                             "email": email,
-                            "token": token
                         }
                         createWebSoc(reload);
                     } else {
@@ -161,11 +184,10 @@ displayView = function(){
     // When the token does not exist, display welcome view, otherwise, profile view
     if ( token == null) {
         document.getElementById("container").innerHTML = template_welcome(template_data);
-        //document.getElementById("container").innerHTML = document.getElementById("welcomeview").innerHTML;
     }else{        
         loadPersonalProfile(template_data);
         document.getElementById("container").innerHTML = template_profile(template_data);
-        //document.getElementById("container").innerHTML = document.getElementById("profileview").innerHTML;
+        
 		// Load the D3 graph
         setupGraph();
         retrieveMsg('home');
@@ -181,7 +203,6 @@ signInWebSocket = function(){
     var signInUser = {
         "type": "signin",
         "email" : currentEmail,
-        "token" : currentToken
     }
     createWebSoc(signInUser);
     
@@ -334,7 +355,7 @@ signUpValidator = function(form){
     var pw1 = form.passwordSignUp.value;
     var pw2 = form.repeatPSW.value;
 
-    //Mandatory Check
+    // Mandatory Check
     if (mandatoryCheck(userFirstName) == false){
         clearMsg('loginmsg');
         document.getElementById("errormsgSignUp").innerHTML = "Please type your first name.";
@@ -518,24 +539,17 @@ signOut = function(){
         if (con.readyState == 4){
             var responseMsg = JSON.parse(con.responseText);
             if (con.status==200){
-                var signOut = {
-                    "type": "signout",
-                    "email": currentEmail,
-                    "token": currentToken
-                }
-                ws.send(JSON.stringify(signOut));
 
                 // Update the no. of views if the user searched someone before sign out
                 // Get the email address displayed in browse tab and exclude it in the count
-                var email_browser = document.getElementsByName("email_otherUser")[0];
-                if (email_browser) { email_browser = document.getElementsByName("email_otherUser")[0].innerHTML;}
-                else {email_browser == "";}
-                if (email_browser != ""){
+                var email_browse = document.getElementById("email_otherUser");
+               // debugger;
+                if (email_browse) { email_browse = email_browse.innerHTML;}
+                else {email_browse = null;}
+                if (email_browse != null){
                     var updateview = {
                         "type": "updateuserview",
-                        "value": "signout",
-                        "email": email_browser,
-                        "token": currentToken
+                        "email": email_browse,
                     }
                     ws.send(JSON.stringify(updateview));
                 }
@@ -658,13 +672,6 @@ postMsg = function(tab, form){
             if (con.status == 200){
                form.reset();
                retrieveMsg(tab); 
-               // Update the number of posts
-               var postMsg = {
-                    "type": "postMsg",
-                    "email": email,
-                    "token": currentToken
-               }
-               ws.send(JSON.stringify(postMsg));
             } 
             document.getElementById("errormsgPostWall_"+tab).innerHTML = response.message;
         }
@@ -731,15 +738,14 @@ searchUser = function(form){
     var email = form.searchEmail.value;
     var currentToken = localStorage.getItem("token");
 
-    // Update the number of views
-    /*
-        Reduce the number of views when the user searches another user profile
-    */
-    var previousEmail = document.getElementsByName("email_otherUser")[0];
+    // Update the number of views: 
+    // Reduce the number of views when the user searches another user profile
+    var previousEmail = document.getElementById("email_otherUser");
+    //debugger;
     if (previousEmail){
         previousEmail = previousEmail.innerHTML;
     } else {
-        previousEmail = "null";
+        previousEmail = null;
     }
 
     con.open("GET",'/getUserDataByEmail/'+currentToken+"/"+email,true);
@@ -749,10 +755,9 @@ searchUser = function(form){
             var responseMsg = JSON.parse(con.responseText);
             if (con.status==200){
                 clearMsg("errorMsgSearch");
-                //Display user information
-                //Overwrite the existing personal information
-                var data = responseMsg.data[0];
                 
+                // Combine the personal data from server with json file for templating
+                var data = responseMsg.data[0];
                 var result = [];
                 var cnt = 0;
                 for (var key in template_data) {
@@ -773,20 +778,10 @@ searchUser = function(form){
                     }
                 }
                 
-
-//                
-//                document.getElementById("personalInfo_browse").innerHTML = "";
-//                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-12\"><h3 class=\"title\">Personal Information</h3></div></div>";
-//                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Email: </label></div><div class=\"col-md\"><div id=\"email_otherUser\" name=\"email_otherUser\">" + data['email'] + "</div></div></div>";
-//                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>First Name: </label></div><div class=\"col-md\">" + data['firstname'] + "</div></div>";
-//                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Family Name: </label></div><div class=\"col-md\">" + data['familyname'] + "</div></div>";
-//                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Gender: </label></div><div class=\"col-md\">" + data['gender'] + "</div></div>";
-//                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>City: </label></div><div class=\"col-md\">" + data['city'] + "</div></div>";
-//                document.getElementById("personalInfo_browse").innerHTML += "<div class=\"row\"><div class=\"col-md-3\"><label>Country: </label></div><div class=\"col-md\">" + data['country'] + "</div></div>";
-
-                //Display the message wall
+                //Display the personal information and message wall
                 document.getElementById("msgWallDisplay").innerHTML = document.getElementById("msgwallcontent").innerHTML;
                 document.getElementById("personalInfo_browse").innerHTML = template_personalInfo(result);    
+                
                 // Display the message on the wall
                 retrieveMsg('browse');
 
@@ -796,16 +791,14 @@ searchUser = function(form){
                 // Clear the feedback for the post area if necessary
                 clearMsg('errormsgPostWall_browse');
 
-                // Send message to update no. of views
-                var searchUser = {
-                    "type": "updateuserview",
-                    "value": "search",
-                    "email": email,
-                    "previousEmail": previousEmail,
-                    "token": currentToken
+                // Send message to update no. of views if the user searches someone before
+                if (previousEmail != null){
+                    var searchUser = {
+                        "type": "updateuserview",
+                        "email": previousEmail
+                    }
+                    ws.send(JSON.stringify(searchUser));
                 }
-                ws.send(JSON.stringify(searchUser));
-
             } else {
                 document.getElementById("errorMsgSearch").innerHTML = responseMsg.message;
             }
@@ -815,12 +808,7 @@ searchUser = function(form){
     return false;
 }
 
-// Clear the feedback from the server after posted a message
-// Call this function:
-// Home tab: when user focuses on the textarea again after posted a message
-// Browse tab: 
-// 1. When user focuses on the textarea again after posted a message
-// 2. Search another user
+// Clear the error message on UI
 clearMsg = function(eleID){
     document.getElementById(eleID).innerHTML = "";
 }

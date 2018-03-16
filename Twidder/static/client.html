@@ -165,7 +165,7 @@
                     <form id="postMsgForm_home" action="" method="post" onsubmit="return postMsg('home', this)">
                         <div class="row">
                             <div class="col-md-12">
-                                <textarea id="home_textarea" ondrop="drop(event)" ondragover="allowDrop(event)" rows="6" name="postArea" class="postBox" ></textarea>
+                                <textarea id="home_textarea" onfocus = "return clearMsg('errormsgPostWall_home')"ondrop="drop(event)" ondragover="allowDrop(event)" rows="6" name="postArea" class="postBox" ></textarea>
                             </div>
                         </div>
                         

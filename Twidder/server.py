@@ -9,9 +9,8 @@ import random
 app = Flask(__name__, static_url_path = '')
 app.debug = True
 
-# Dictionary to store web socket and email
-# One web socket for one user
-# Email is the key
+# Dictionary to store web socket and email per user
+# Use email as the key
 loggedUsers = {}
 # Store the total number of online users
 num_onlineuser = 0
@@ -36,18 +35,16 @@ def webSocket():
     if request.environ.get('wsgi.websocket'):
         ws = request.environ['wsgi.websocket']
         while True:
-            # Receive the message type, email and token from client side in json format
+            # Receive message from client side in json format
             message = ws.receive()
             if message is not None:
 				print("[DEBUG] " + message)
 				message = json.loads(message)
 				msgtype = str(message['type'])
 				email = str(message['email'])
-				token = str(message['token'])
 
 				# Sign in
 				if msgtype == "signin":
-					num_onlineuser += 1
 					# Extract the ws if the user signed in before
 					if email in loggedUsers:
 						tmp_ws = loggedUsers[email]
@@ -62,6 +59,7 @@ def webSocket():
 
 					# Store the latest ws in the dict
 					loggedUsers[email] = ws
+					# Initiate view table for user
 					if not email in view_table:
 						view_table[email] = 0
 				
@@ -75,63 +73,45 @@ def webSocket():
 					num_onlineuser -= 1
 					loggedUsers[email] = ""
 					
-				# Sign out
-				elif msgtype == "signout":
-					loggedUsers[email] = ""
-					num_onlineuser -= 1
-
-				# Update the total number of posts
-				elif msgtype == "postMsg":
-					num = database_helper.get_num_post(email)
-					if email in loggedUsers and loggedUsers[email] != "":
-						totalPosts = database_helper.get_totalnum_post()
-						loggedUsers[email].send(json.dumps({"type":"postMsg", "value":str(num), "total":str(totalPosts)}))
-				
 				# Update the total number of views per user
 				elif msgtype == "updateuserview":
-					value = str(message['value'])
+					view_table[email] -= 1
 					
-					# Implement when the user searches someone
-					if value == "search":
-						previousEmail = str(message['previousEmail'])
-						if email in view_table:
-							view_table[email] += 1
-						else:
-							view_table[email] = 1
-
-						print (previousEmail)
-						if previousEmail != "null":
-							view_table[previousEmail] = view_table[previousEmail] - 1
-					
-					# If the user searches someone before sign out, 
-					# exclude the profile display in the browse tab		
-					elif value == "signout":
-						view_table[email] -= 1
-
-					# Send latest no. of views
-					totalUsers = database_helper.get_num_user()
-					if email in loggedUsers and loggedUsers[email] != "":
-						loggedUsers[email].send(json.dumps({"type":"updateUserView", "value":str(view_table[email]), "total":str(totalUsers)}))
-
-					if previousEmail in loggedUsers and loggedUsers[previousEmail] != "":
-						loggedUsers[previousEmail].send(json.dumps({"type":"updateUserView", "value":str(view_table[previousEmail]), "total":str(totalUsers)}))
-
-				# Update the total number of online users	
-				if msgtype != "postmsg":
-					for l in loggedUsers:
-						tmp_ws = loggedUsers[l]
-						if  tmp_ws != "":
-							totalUsers = database_helper.get_num_user()
-							tmp_ws.send(json.dumps({"type":"updateUserCnt", "value":str(num_onlineuser), "total":str(totalUsers)}))
-							tmp_ws.send(json.dumps({"type":"updateUserView", "value":str(view_table[l]), "total":str(totalUsers)}))
+				# Update the total number of online users and views when sign in	
+				for l in loggedUsers:
+					tmp_ws = loggedUsers[l]
+					if tmp_ws != "":
+						totalUsers = database_helper.get_num_user()
+						print "[DEBUG] Overall update cnt"
+						tmp_ws.send(json.dumps({"type":"updateUserCnt", "value":str(num_onlineuser), "total":str(totalUsers)}))
+						tmp_ws.send(json.dumps({"type":"updateUserView", "value":str(view_table[l]), "total":str(totalUsers)}))
             else:
                 print("[Debug] Exit loop")
                 loggedUsers[email] = ""
                 break
 	return ""
 
+def send_num_post(email):
+	num_post = database_helper.get_num_post(email)
+	totalPost = database_helper.get_totalnum_post()
+	if email in loggedUsers and loggedUsers[email] != "":
+		loggedUsers[email].send(json.dumps({"type":"postMsg", "value":str(num_post), "total":str(totalPost)}))
+
+def send_num_onlineuser():
+	global num_onlineuser
+	for l in loggedUsers:
+		if  loggedUsers[l] != "":
+			totalUsers = database_helper.get_num_user()
+			loggedUsers[l].send(json.dumps({"type":"updateUserCnt", "value":str(num_onlineuser), "total":str(totalUsers)}))
+
+def send_num_view(email):
+	if email in loggedUsers and loggedUsers[email] != "":
+		totalUsers = database_helper.get_num_user()
+		loggedUsers[email].send(json.dumps({"type":"updateUserView", "value":str(view_table[email]), "total":str(totalUsers)}))
+
 @app.route('/signin', methods=['POST'])
 def sign_in():
+	global num_onlineuser
 	try:
 		email = request.json['email']
 		password = request.json['password']
@@ -143,6 +123,7 @@ def sign_in():
 		return json.dumps({"success": False, "message":"Wrong username or password."}),404
 	
 	tmp_token = database_helper.get_tokenByEmail(email)
+	# Allow second login for auto-sign out scenario
 	if tmp_token:
 		database_helper.delete_token(tmp_token[0])
 		#return json.dumps({"success": False, "message":"User already signed in."}),501
@@ -154,6 +135,9 @@ def sign_in():
 		token += letters[index]
 	
 	database_helper.add_token(email, token)
+	# Update no. of online users
+	num_onlineuser += 1
+	
 	return json.dumps({"success": True, "message":"Successfully signed in.", "data": token}),200
 		
 
@@ -183,18 +167,23 @@ def sign_up():
 
 @app.route('/signout', methods=['POST'])
 def sign_out():
+	global num_onlineuser
 	try:
 		token = request.json['token']
 	except:
 		return json.dumps({"success": False, "message":"Json key error."}),400
 
-	is_there = database_helper.get_emailByToken(token)
+	email = database_helper.get_emailByToken(token)
 	
-	if not is_there:
+	if not email:
 		return json.dumps({"success": False, "message":"You are not signed in"}),403
 
 	database_helper.delete_token(token)
 
+	# For live data update
+	num_onlineuser -= 1
+	loggedUsers[email] = ""
+	send_num_onlineuser()
 
 	return json.dumps({"success": True, "message":"Successfully signed out"}),200
 
@@ -237,8 +226,16 @@ def get_user_data_by_email(token = None, email=None):
 	# Return the user profile
 	data = database_helper.find_user(email)
 	if data:
+		# Update the no. of views
+		email = str(email)
+		if email in view_table:
+			view_table[email] += 1
+		else:
+			view_table[email] = 1
+
+		send_num_view(email)
+
 		return json.dumps({"success": True, "message": "User data retrieved.", "data": [dict(x) for x in data]}),200
-	# Check if the target user exists
 	else:
 		return json.dumps({"success": False, "message":"No such user."}),404
 
@@ -260,7 +257,11 @@ def post_message():
 	if not database_helper.find_user(toEmail):
 		return json.dumps({"success": False, "message":"No such user."}),404		
 
-	database_helper.post_msg(toEmail, fromEmail, content)	
+	database_helper.post_msg(toEmail, fromEmail, content)
+
+	# Send latest num of posts to client	
+	send_num_post(toEmail)
+
 	return json.dumps({"success": True, "message":"Message posted."}),200
 
 @app.route('/getUserMessagesByToken/<token>', methods=['GET'])
