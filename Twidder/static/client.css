@@ -125,6 +125,34 @@ form#searchBar{
     display: none;
 }
 
+@media (min-width: 576px) and (max-width: 768px){
+    /*Welcome*/
+    #wimage{
+        width:130%;
+        max-width: 400px;
+    } 
+    #navigationBar{
+        float:none;
+        display: inline-block;
+    }
+
+    #quickNavBar{
+        display: none;
+    }
+    
+    #ProfileContent{
+        padding-left: 60px;
+    }
+    #ProfileContent button.tab{
+        /*border-bottom-right-radius: 0px;
+        border-top-right-radius: 0px;*/
+    }
+    #ProfileContent .tabcontent{
+        border-radius: 0px;
+    }
+
+}
+
 @media (min-width: 768px){
     /*Welcome*/
     #wimage{
@@ -151,3 +179,4 @@ form#searchBar{
 		border-top-left-radius: 0px;
 	}
 }
+

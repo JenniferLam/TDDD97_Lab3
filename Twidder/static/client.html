@@ -28,7 +28,11 @@
        	<div id="WelcomeContent" class="center">
             <div class="row">
                 <div class="col-md-6" id="slogan">
-                    <img id="wimage" class="shrink" src="wimage.png" alt="Twidder">
+                    <picture>
+                        <source srcset = "wimage_logo.png" media="(max-width: 576px)" alt="Twidder">
+                        <source srcset = "wimage.png" alt="Twidder">
+                        <img id="wimage" class="shrink" src="wimage.png" alt="Twidder">
+                    </picture>
                 </div>
                 <div class="col-md-6" id="formContainer">
                     <div class="row shrink" id="signin">
