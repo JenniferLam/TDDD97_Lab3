@@ -114,20 +114,20 @@
 	    <div id="ProfileContent">
             <div class="row">
                 <div class="col-md-2 collapse" id="navigationBar">
-                    {{#navBar}}
-                        <div class="row">
-                            <div class="col-md-12">
+                    <div class="row">
+                        {{#navBar}}
+                            <div class="col-md-12 col-sm-4">
                                 <button class="{{class}}" onclick="selectTab(this,'{{onclick}}')" id="{{id}}">{{value}}</button>
                             </div>
-                        </div>
-                    {{/navBar}}
+                        {{/navBar}}
+                    </div>
                 </div>
             
                 <div class="col-md tabcontent defaultPage" id="home">
                     <div id="personalInfo_home_display">
                         <div class = "row">
                         {{#graph}}
-                                <div class="col-md-4">
+                                <div class="col-md-4 col-sm-6">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h3>{{value}}</h3>
