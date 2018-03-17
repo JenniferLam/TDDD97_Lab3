@@ -126,8 +126,8 @@
                 <div class="col-md tabcontent defaultPage" id="home">
                     <div id="personalInfo_home_display">
                         <div class = "row">
-                        {{#graph}}
-                                <div class="col-md-4 col-sm-6">
+                            {{#graph}}
+                                <div class="col-md-4 col-sm-6 col-lg-3">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h3>{{value}}</h3>
@@ -138,16 +138,21 @@
                                     </div>
                                 </div>
                             
-                        {{/graph}}
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h3 class="title">Personal Information</h3>
+                            {{/graph}}
+                            
+                            <div class="col-md-12 col-lg-3">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h3 class="title">Personal Information</h3>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div id="personalInfo_home"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div id="personalInfo_home"></div>
-                        
                     </div>
 
                 
